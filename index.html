@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presença, a agenda da sua clínica</title>
+<meta name="description" content="A Presença é a agenda da sua clínica, com mensagens e assistente. Horário cancelado vai para a lista de espera, e quem confirma primeiro fica com ele. Desenvolvida e operada pela Borysta.">
+<meta name="theme-color" content="#F6FBFE">
+<link rel="canonical" href="https://presenca.borysta.com/">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/Figtree-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Figtree-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/site.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="top">
+  <a class="top__logo" href="#" aria-label="Presença, início"><img src="assets/logo/presenca-navy.svg" width="132" height="42" alt="Presença"></a>
+  <a class="top__entrar link" href="https://dev.presenca.borysta.com/#/login">Entrar</a>
+</header>
+
+<main id="conteudo">
+
+<section class="hero" aria-labelledby="hero-h">
+  <div class="col">
+    <h1 id="hero-h" data-rise>A agenda que se preenche sozinha.</h1>
+    <p class="hero__p" data-rise style="--i:1">A Presença é a agenda da sua clínica, com mensagens e assistente. Horário cancelado vai para a lista de espera, e quem confirma primeiro fica com ele.</p>
+    <div class="hero__acts" data-rise style="--i:2">
+      <a class="btn" href="https://dev.presenca.borysta.com/#/cadastro">Criar conta</a>
+      <a class="arrow link" href="mailto:anna.santana@borysta.com?subject=Presen%C3%A7a&amp;body=Ol%C3%A1%2C%20Anna.%0A%0AQuero%20conhecer%20a%20Presen%C3%A7a.%20Minha%20cl%C3%ADnica%3A%20">Fale com a gente <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+
+  <div class="agenda" data-ui data-agenda data-rise style="--i:3">
+    <div class="agenda__bar"><strong>Clínica Bem-Estar</strong><span>Agenda · hoje</span><span class="agenda__count">6 atendimentos · 3 na lista de espera</span></div>
+    <div class="agenda__body">
+      <ol class="agenda__rows" data-rows aria-live="polite">
+        <li class="row" data-time="09:00"><span class="row__t">09:00</span><span class="row__who">Carlos Mendes</span><span class="row__what">Avaliação · Dra. Camila Ferreira</span><span class="row__st row__st--ok">Confirmado</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
+        <li class="row" data-time="09:45"><span class="row__t">09:45</span><span class="row__who">Juliana Rocha</span><span class="row__what">Limpeza · Dr. Rafael Pinto</span><span class="row__st row__st--ok">Confirmado</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
+        <li class="row" data-time="10:30"><span class="row__t">10:30</span><span class="row__who">Pedro Alves</span><span class="row__what">Retorno · Dra. Camila Ferreira</span><span class="row__st">Sem confirmação</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
+        <li class="row" data-time="11:15"><span class="row__t">11:15</span><span class="row__who">Marina Costa</span><span class="row__what">Primeira consulta · Dr. Rafael Pinto</span><span class="row__st row__st--ok">Confirmado</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
+        <li class="row" data-time="14:00"><span class="row__t">14:00</span><span class="row__who">Rafael Souza</span><span class="row__what">Avaliação · Dra. Camila Ferreira</span><span class="row__st">Sem confirmação</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
+        <li class="row" data-time="14:45"><span class="row__t">14:45</span><span class="row__who">Beatriz Nunes</span><span class="row__what">Tratamento, sessão 3 · Dr. Rafael Pinto</span><span class="row__st row__st--ok">Confirmado</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
+      </ol>
+      <aside class="agenda__side">
+        <h2 class="agenda__h">Lista de espera</h2>
+        <ol class="wait" data-wait>
+          <li data-name="Ana Lima" data-kind="check-up">Ana Lima <span>check-up, de manhã</span></li>
+          <li data-name="Lucas Pereira" data-kind="limpeza">Lucas Pereira <span>limpeza, à tarde</span></li>
+          <li data-name="Sofia Martins" data-kind="primeira consulta">Sofia Martins <span>primeira consulta, qualquer dia</span></li>
+        </ol>
+        <h2 class="agenda__h">Mensagens</h2>
+        <div class="chat" data-chat aria-live="polite"><p class="chat__note">Cancele um horário à esquerda e veja a lista de espera preencher a vaga.</p></div>
+      </aside>
+    </div>
+    <div class="agenda__foot"><span>Dados fictícios.</span><button type="button" class="agenda__reset link" data-reset>Recomeçar o dia</button></div>
+    <svg class="pointer" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"><path d="M5 3l14 9-6 1 3 7-3 1-3-7-5 4z" fill="#fff" stroke="#042B54" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  </div>
+  <noscript><p class="col hero__noscript">Sem script, a agenda acima fica parada. O que ela mostra: ao cancelar um horário, a lista de espera recebe a mensagem, quem confirma primeiro fica com o horário e a recepção aprova.</p></noscript>
+</section>
+
+<section class="intro" aria-label="O que é a Presença">
+  <div class="intro__text">
+    <p class="intro__lead" data-reveal><span translate="no">A Presença</span> é a agenda da sua clínica: é nela que os atendimentos são marcados, confirmados e remanejados.</p>
+    <p data-reveal style="--i:1">Cada mudança vira uma mensagem para o paciente certo. Um assistente automático escreve e lê essas mensagens, dentro das regras que a clínica define, e se apresenta como assistente em toda conversa.</p>
+    <p data-reveal style="--i:2">A recepção aprova o que importa. Quem está no meio de um tratamento nunca é movido automaticamente.</p>
+    <p data-reveal style="--i:3">Feita para qualquer negócio que vive de horário marcado: consultórios, clínicas, fisioterapia, cuidadores, veterinários, salões e barbearias.</p>
+    <p data-reveal style="--i:4">Desenvolvida e operada pela <a class="link-plain" href="https://borysta.com">Borysta</a>.</p>
+  </div>
+  <figure class="fade" data-fade data-reveal style="--i:2">
+    <img class="is-on" src="assets/img/mundo-dentista.jpg" width="960" height="1200" alt="Dentista atendendo uma paciente no consultório">
+    <img src="assets/img/mundo-clinica.jpg" width="960" height="1200" alt="Médica sorrindo no consultório" loading="lazy">
+    <img src="assets/img/mundo-veterinario.jpg" width="960" height="1200" alt="Veterinário conversando com a tutora de um cachorro" loading="lazy">
+    <img src="assets/img/mundo-salao.jpg" width="960" height="1200" alt="Barbeiro cortando o cabelo de um cliente" loading="lazy">
+    <button type="button" class="fade__pause" data-fade-pause aria-pressed="false" hidden>Pausar as fotos</button>
+  </figure>
+</section>
+
+<section class="how" aria-labelledby="how-h">
+  <div class="how__stage">
+    <div class="inbox" data-ui data-stage data-state="3">
+      <div class="inbox__bar"><strong>Caixa de entrada</strong><span>Pedro Alves · 10:30</span></div>
+      <div class="inbox__body">
+        <p class="msg msg--in" data-s="1">Hoje não vou poder ir.<time>10:02</time></p>
+        <p class="msg msg--out" data-s="1">Tudo bem, Pedro. Cancelei o seu horário das 10:30. Quando quiser remarcar, é só responder aqui.<time>10:02</time></p>
+        <p class="sys" data-s="1">10:30 ficou livre. Lista de espera: 3 pessoas.</p>
+        <p class="to" data-s="2">Para Ana Lima</p>
+        <p class="msg msg--out" data-s="2">Olá, Ana! Sou o assistente da Clínica Bem-Estar. Abriu um horário hoje às 10:30 para check-up. Quer ficar com ele? Responda SIM.<time>10:03</time></p>
+        <p class="sys" data-s="2">A mesma mensagem foi para Lucas Pereira e Sofia Martins, nessa ordem.</p>
+        <p class="to" data-s="3">Ana Lima</p>
+        <p class="msg msg--in" data-s="3">SIM<time>10:05</time></p>
+        <div class="sys sys--act" data-s="3" aria-live="polite"><span>Ana Lima · 10:30 · check-up</span><button type="button" class="ui-btn" data-approve>Aprovar</button><span class="ok" hidden>Confirmado</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="how__steps">
+    <h2 id="how-h">Sem trinta ligações</h2>
+    <div class="step" data-step="1"><p class="step__s">O paciente cancela.</p><p class="step__d">A vaga das 10:30 fica livre na agenda.</p></div>
+    <div class="step" data-step="2"><p class="step__s">A lista de espera recebe a mensagem.</p><p class="step__d">Quem espera por aquele tipo de horário é avisado, em ordem.</p></div>
+    <div class="step" data-step="3"><p class="step__s">Quem confirma primeiro fica com o horário.</p><p class="step__d">A recepção vê a nova marcação e aprova.</p></div>
+  </div>
+</section>
+
+<section class="bands" aria-label="O que a Presença faz pela sua clínica">
+  <div class="band is-on" data-band>
+    <div class="band__in"><p class="band__s">Horário cancelado volta a ser ocupado.</p><p class="band__d">A lista de espera é avisada por mensagem, e quem confirma primeiro fica com o horário.</p></div>
+    <button type="button" class="sw" role="switch" aria-checked="true" data-sw data-ui aria-label="Horário cancelado volta a ser ocupado"><span class="sw__k"></span></button>
+  </div>
+  <div class="band" data-band>
+    <div class="band__in"><p class="band__s">Profissional faltou? Um plano só.</p><p class="band__d">Todos os atendimentos afetados são remanejados de uma vez, e a recepção aprova.</p></div>
+    <button type="button" class="sw" role="switch" aria-checked="false" data-sw data-ui aria-label="Profissional faltou? Um plano só"><span class="sw__k"></span></button>
+  </div>
+  <div class="band is-on" data-band>
+    <div class="band__in"><p class="band__s">Tratamento fica com o seu profissional.</p><p class="band__d">Quem está no meio de um tratamento nunca é movido automaticamente. Essa regra não se desliga.</p></div>
+    <span class="band__always">sempre</span>
+    <button type="button" class="sw" role="switch" aria-checked="true" aria-disabled="true" data-sw data-ui aria-label="Tratamento fica com o seu profissional, sempre ligado"><span class="sw__k"></span></button>
+  </div>
+  <div class="band is-on" data-band>
+    <div class="band__in"><p class="band__s">Agenda nova, cheia na hora.</p><p class="band__d">Quando entra um profissional ou abre mais horário, os pacientes em espera são chamados.</p></div>
+    <button type="button" class="sw" role="switch" aria-checked="true" data-sw data-ui aria-label="Agenda nova, cheia na hora"><span class="sw__k"></span></button>
+  </div>
+  <div class="band" data-band>
+    <div class="band__in"><p class="band__s">Retorno no prazo certo.</p><p class="band__d">Pacientes já atendidos são lembrados quando chega a hora de voltar.</p></div>
+    <button type="button" class="sw" role="switch" aria-checked="false" data-sw data-ui aria-label="Retorno no prazo certo"><span class="sw__k"></span></button>
+  </div>
+  <div class="band band--rules">
+    <div class="band__in"><p class="band__s">A clínica define as regras.</p><p class="band__d">Tipos de atendimento, lembretes e quem aprova cada mudança.</p></div>
+  </div>
+</section>
+
+<section class="three" aria-labelledby="three-h">
+  <h2 id="three-h" data-reveal>Um atendimento, três momentos</h2>
+  <div class="three__item" data-reveal>
+    <span class="three__state">Marcado</span>
+    <div class="appt" data-ui><span class="appt__t">10:00</span><span class="appt__who">Vanessa Rocha</span><span class="appt__chip">Sem confirmação</span><span class="appt__what">Limpeza · Dra. Camila Ferreira</span><span class="appt__note">Lembrete sai hoje às 16:00</span></div>
+  </div>
+  <div class="three__item" data-reveal style="--i:1" data-live>
+    <span class="three__state" data-live-state>Lembrete enviado</span>
+    <div class="appt is-hover" data-ui data-live-row><span class="appt__t">10:00</span><span class="appt__who">Vanessa Rocha</span><span class="appt__chip" data-live-chip aria-live="polite">Aguardando resposta</span><span class="appt__what">Limpeza · Dra. Camila Ferreira</span><span class="appt__note" data-live-note>Mensagem enviada às 16:00</span><span class="appt__acts" data-live-acts><button type="button" class="ui-btn" data-confirm>Confirmar</button><button type="button" class="ui-btn ui-btn--quiet">Remarcar</button><button type="button" class="ui-btn ui-btn--quiet">Cancelar</button></span>
+      <svg class="pointer pointer--row" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"><path d="M5 3l14 9-6 1 3 7-3 1-3-7-5 4z" fill="#fff" stroke="#042B54" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <div class="three__item" data-reveal style="--i:2">
+    <span class="three__state">Confirmado</span>
+    <div class="appt is-done" data-ui><span class="appt__t">10:00</span><span class="appt__who">Vanessa Rocha</span><span class="appt__chip">Confirmado</span><span class="appt__what">Limpeza · Dra. Camila Ferreira</span><span class="appt__note">Vanessa respondeu SIM às 16:12</span></div>
+  </div>
+</section>
+
+<section class="who" aria-labelledby="who-h">
+  <h2 id="who-h" data-reveal>Para quem é</h2>
+  <div class="who__groups">
+  <div>
+  <p class="who__g" data-reveal>Segmentos</p>
+  <ul class="who__rows" data-reveal style="--i:1">
+    <li><img src="assets/img/marca-dentistas.jpg" width="16" height="16" alt="" loading="lazy"><span>Dentistas</span><span class="who__v">consultas e retornos</span></li>
+    <li><img src="assets/img/marca-clinicas.jpg" width="16" height="16" alt="" loading="lazy"><span>Clínicas e consultórios</span><span class="who__v">consultas</span></li>
+    <li><img src="assets/img/marca-fisioterapia.jpg" width="16" height="16" alt="" loading="lazy"><span>Fisioterapia</span><span class="who__v">sessões</span></li>
+    <li><img src="assets/img/marca-cuidadores.jpg" width="16" height="16" alt="" loading="lazy"><span>Cuidadores e home care</span><span class="who__v">visitas</span></li>
+    <li><img src="assets/img/marca-veterinarios.jpg" width="16" height="16" alt="" loading="lazy"><span>Veterinários</span><span class="who__v">consultas e vacinas</span></li>
+    <li><img src="assets/img/marca-saloes.jpg" width="16" height="16" alt="" loading="lazy"><span>Salões e barbearias</span><span class="who__v">horários</span></li>
+  </ul>
+  </div>
+  <div>
+  <p class="who__g" data-reveal style="--i:2">Por dentro</p>
+  <ul class="who__rows" data-reveal style="--i:3">
+    <li><span class="dot"></span><span>Gerenciado por IA</span><span class="who__v">o assistente se apresenta</span></li>
+    <li><span class="dot"></span><span>Fácil de configurar</span><span class="who__v">equipe, salas e tipos de atendimento</span></li>
+    <li><span class="dot"></span><span>Multilíngue</span><span class="who__v">mensagens em português e em outros idiomas</span></li>
+  </ul>
+  </div>
+  </div>
+</section>
+
+<section class="end" aria-labelledby="end-h">
+  <div class="end__text">
+    <h2 id="end-h" class="end__big" data-reveal>Sua agenda, cheia.</h2>
+    <p data-reveal style="--i:1">Depois do botão, você cadastra a clínica, a equipe e os tipos de atendimento e já abre a agenda.</p>
+  </div>
+  <div class="signup" data-ui data-reveal style="--i:2" data-signup>
+    <p class="signup__t">Criar a conta da clínica</p>
+    <label class="signup__l" for="clinic">Nome da clínica</label>
+    <input class="signup__f" id="clinic" name="clinic" type="text" value="Clínica Bem-Estar" autocomplete="organization" spellcheck="false">
+    <div class="seg" role="group" aria-label="Tipo de negócio">
+      <button type="button" class="seg__b" aria-pressed="true" data-seg>Saúde</button>
+      <button type="button" class="seg__b" aria-pressed="false" data-seg>Outros serviços</button>
+    </div>
+    <a class="btn btn--wide" href="https://dev.presenca.borysta.com/#/cadastro">Criar conta</a>
+    <p class="signup__s">Já tem conta? <a class="link-plain" href="https://dev.presenca.borysta.com/#/login">Entrar</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <span translate="no">Presença, por Borysta</span>
+  <nav class="foot__links" aria-label="Borysta"><a class="link" href="https://borysta.com">borysta.com</a><a class="link" href="https://www.instagram.com/borysta.ia" rel="noopener">@borysta.ia</a><a class="link" href="mailto:anna.santana@borysta.com">anna.santana@borysta.com</a></nav>
+  <span class="foot__r">2026 Borysta AI Agency LTDA · Fotos: Pexels</span>
+</footer>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>
