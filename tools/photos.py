@@ -3,15 +3,21 @@
 
 Source: the pool in the Borysta work folder (Bildwelt/Originale), register Presenca_Bildquellen.txt.
 Recipe: grade() from the Borysta template system (cool blue, less contrast, lifted shadows, grain).
-Run: python3 tools/photos.py  (writes assets/img/)
+The hero portrait is freed from its background with the Vision framework of macOS (tools/cutout.swift,
+compiled on the fly with swiftc) and saved as WebP with transparency.
+Run: python3 tools/photos.py [target ...]  (writes assets/img/, only the named targets when given)
 """
 import os
+import subprocess
+import sys
+import tempfile
 from PIL import Image, ImageEnhance
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 POOL = os.path.expanduser("~/Desktop/Claude/Borysta AI Agency/09 — Operations & Projects/09.e) - Presenca/07 - Marketing/Bildwelt/Originale")
+POOL_B = os.path.expanduser("~/Desktop/Claude/Borysta AI Agency/06 — Marketing & Sales/06.a) - Marketing/2 - Templates/Bildwelt/Originale")
 OUT = os.path.join(ROOT, "assets", "img")
 
 # file, target, size (w, h), focus (px, py in 0..1)
@@ -28,7 +34,16 @@ CUTS = [
     ("pexels_18459702.jpg", "marca-cuidadores.jpg", (96, 96), (0.72, 0.4)),
     ("pexels_6234612.jpg", "marca-veterinarios.jpg", (96, 96), (0.4, 0.5)),
     ("pexels_7697445.jpg", "marca-saloes.jpg", (96, 96), (0.4, 0.4)),
+    # round 2: the segment cards reuse the four worlds above and add the carers
+    ("pexels_7345476.jpg", "mundo-cuidadores.jpg", (960, 1200), (0.5, 0.4)),
+    ("pexels_8313224.jpg", "sobre.jpg", (1000, 1080), (0.5, 0.4)),
+    ("pexels_6627325.jpg", "faixa.jpg", (1920, 820), (0.5, 0.4)),
+    ("pexels_4269206.jpg", "recepcao.jpg", (900, 1100), (0.5, 0.45)),
+    (os.path.join(POOL_B, "pexels_5355850.jpg"), "equipe-tablet.jpg", (900, 1100), (0.5, 0.35)),
 ]
+
+# the hero portrait: file, target, widths
+HERO = ("pexels_19957222.jpg", "medica", (1400, 760))
 
 
 def grade(im):
@@ -59,9 +74,29 @@ def cut(im, w, h, px, py):
     return im.crop((x0, y0, x0 + w, y0 + h))
 
 
+def cutout(path):
+    tmp = tempfile.mkdtemp()
+    exe, png = os.path.join(tmp, "cutout"), os.path.join(tmp, "cut.png")
+    subprocess.run(["swiftc", "-O", os.path.join(HERE, "cutout.swift"), "-o", exe], check=True)
+    subprocess.run([exe, path, png], check=True)
+    im = Image.open(png).convert("RGBA")
+    return im.crop(im.getchannel("A").getbbox())
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
+    only = sys.argv[1:]
+    if not only or HERO[1] in only:
+        im = cutout(os.path.join(POOL, HERO[0]))
+        for w in HERO[2]:
+            sized = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
+            out = grade(sized)
+            out.putalpha(sized.getchannel("A"))
+            out.save(os.path.join(OUT, f"{HERO[1]}-{w}.webp"), quality=86, method=6)
+            print("cut", f"{HERO[1]}-{w}.webp")
     for src, dst, (w, h), (px, py) in CUTS:
+        if only and dst not in only:
+            continue
         im = Image.open(os.path.join(POOL, src))
         grade(cut(im, w, h, px, py)).save(os.path.join(OUT, dst), quality=82, subsampling=0, optimize=True)
         print("cut", dst)
