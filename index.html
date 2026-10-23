@@ -3,201 +3,569 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Presença, a agenda da sua clínica</title>
-<meta name="description" content="A Presença é a agenda da sua clínica, com mensagens e assistente. Horário cancelado vai para a lista de espera, e quem confirma primeiro fica com ele. Desenvolvida e operada pela Borysta.">
-<meta name="theme-color" content="#F6FBFE">
+<title>Presença, gestão de pacientes com IA</title>
+<meta name="description" content="A Presença é uma plataforma de gestão de pacientes com IA: lembretes, confirmações, lista de espera e um assistente que conduz as conversas de agenda por mensagens. Desenvolvida e operada pela Borysta.">
+<meta name="theme-color" content="#042B54">
 <link rel="canonical" href="https://presenca.borysta.com/">
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="assets/fonts/Figtree-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Figtree-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Figtree-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="assets/video/hero-poster.jpg" fetchpriority="high">
 <link rel="stylesheet" href="assets/site.css">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 
-<header class="top">
-  <a class="top__logo" href="#" aria-label="Presença, início"><img src="assets/logo/presenca-navy.svg" width="132" height="42" alt="Presença"></a>
-  <a class="top__entrar link" href="https://dev.presenca.borysta.com/#/login">Entrar</a>
+<div class="topbar">
+  <div class="wrap topbar__in">
+    <p class="topbar__claim">Agenda com mensagens para clínicas e consultórios</p>
+    <ul class="topbar__links">
+      <li><a href="mailto:anna.santana@borysta.com">anna.santana@borysta.com</a></li>
+      <li><a href="https://www.instagram.com/borysta.ia" rel="noopener">@borysta.ia</a></li>
+    </ul>
+  </div>
+</div>
+
+<header class="head">
+  <div class="wrap head__in">
+    <a class="brand" href="#inicio" aria-label="Presença por Borysta, início">
+      <img class="brand__b" src="assets/logo/borysta.png" width="720" height="254" alt="">
+      <span class="brand__sep" aria-hidden="true"></span>
+      <img class="brand__p" src="assets/logo/presenca-white.svg" width="1376" height="446" alt="">
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#inicio">Início</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#plataforma">Plataforma</a>
+      <a href="#para-quem">Para quem é</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <div class="head__acts">
+      <a class="btn btn--line" href="https://dev.presenca.borysta.com/#/login" data-app="login" data-login>Entrar</a>
+      <a class="btn" href="https://dev.presenca.borysta.com/#/cadastro" data-app="cadastro">Criar conta</a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="menu" data-burger>Menu</button>
+    </div>
+  </div>
+  <div class="drawer" id="menu" hidden data-drawer>
+    <nav class="wrap drawer__in" aria-label="Menu">
+      <a href="#inicio">Início</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#plataforma">Plataforma</a>
+      <a href="#para-quem">Para quem é</a>
+      <a href="#contato">Contato</a>
+      <span class="drawer__acts">
+        <a class="btn btn--line" href="https://dev.presenca.borysta.com/#/login" data-login>Entrar</a>
+        <a class="btn" href="https://dev.presenca.borysta.com/#/cadastro">Criar conta</a>
+      </span>
+    </nav>
+  </div>
 </header>
 
 <main id="conteudo">
 
-<section class="hero" aria-labelledby="hero-h">
-  <div class="col">
-    <h1 id="hero-h" data-rise>A agenda que se preenche sozinha.</h1>
-    <p class="hero__p" data-rise style="--i:1">A Presença é a agenda da sua clínica, com mensagens e assistente. Horário cancelado vai para a lista de espera, e quem confirma primeiro fica com ele.</p>
-    <div class="hero__acts" data-rise style="--i:2">
-      <a class="btn" href="https://dev.presenca.borysta.com/#/cadastro">Criar conta</a>
-      <a class="arrow link" href="mailto:anna.santana@borysta.com?subject=Presen%C3%A7a&amp;body=Ol%C3%A1%2C%20Anna.%0A%0AQuero%20conhecer%20a%20Presen%C3%A7a.%20Minha%20cl%C3%ADnica%3A%20">Fale com a gente <span aria-hidden="true">→</span></a>
+<section class="hero" id="inicio" aria-labelledby="hero-t">
+  <div class="wrap hero__in">
+    <div class="hero__text">
+      <h1 id="hero-t">Cuidamos da sua agenda<span class="dot">.</span></h1>
+      <p class="hero__sub">Plataforma de gestão de pacientes com IA</p>
+      <p class="hero__line">Inteligente. Eficiente. Pacientes presentes.</p>
+      <p class="hero__lead">A Presença conversa com os seus pacientes por mensagens: lembra, confirma, remarca e oferece os horários vagos a quem está na lista de espera. Sua equipe foca no atendimento.</p>
+      <div class="acts">
+        <a class="btn btn--lg" href="https://dev.presenca.borysta.com/#/cadastro" data-app="cadastro">Criar conta</a>
+        <a class="btn btn--line btn--lg" href="#plataforma">Ver a plataforma</a>
+      </div>
+      <ul class="minis">
+        <li>Gerenciado por IA</li>
+        <li>Fácil de configurar</li>
+        <li>Multilíngue</li>
+      </ul>
+    </div>
+    <div class="hero__visual">
+      <video class="hero__video" muted loop playsinline preload="none" poster="assets/video/hero-poster.jpg" width="1920" height="1080" aria-label="Mulher trabalhando no notebook em um escritório tranquilo" data-hero-video>
+        <source src="assets/video/hero-1080.mp4" type="video/mp4" media="(min-width: 961px)">
+        <source src="assets/video/hero-540.mp4" type="video/mp4">
+      </video>
+      <button class="hero__pause" type="button" data-hero-pause hidden>Pausar</button>
     </div>
   </div>
-
-  <div class="agenda" data-ui data-agenda data-rise style="--i:3">
-    <div class="agenda__bar"><strong>Clínica Bem-Estar</strong><span>Agenda · hoje</span><span class="agenda__count">6 atendimentos · 3 na lista de espera</span></div>
-    <div class="agenda__body">
-      <ol class="agenda__rows" data-rows aria-live="polite">
-        <li class="row" data-time="09:00"><span class="row__t">09:00</span><span class="row__who">Carlos Mendes</span><span class="row__what">Avaliação · Dra. Camila Ferreira</span><span class="row__st row__st--ok">Confirmado</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
-        <li class="row" data-time="09:45"><span class="row__t">09:45</span><span class="row__who">Juliana Rocha</span><span class="row__what">Limpeza · Dr. Rafael Pinto</span><span class="row__st row__st--ok">Confirmado</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
-        <li class="row" data-time="10:30"><span class="row__t">10:30</span><span class="row__who">Pedro Alves</span><span class="row__what">Retorno · Dra. Camila Ferreira</span><span class="row__st">Sem confirmação</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
-        <li class="row" data-time="11:15"><span class="row__t">11:15</span><span class="row__who">Marina Costa</span><span class="row__what">Primeira consulta · Dr. Rafael Pinto</span><span class="row__st row__st--ok">Confirmado</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
-        <li class="row" data-time="14:00"><span class="row__t">14:00</span><span class="row__who">Rafael Souza</span><span class="row__what">Avaliação · Dra. Camila Ferreira</span><span class="row__st">Sem confirmação</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
-        <li class="row" data-time="14:45"><span class="row__t">14:45</span><span class="row__who">Beatriz Nunes</span><span class="row__what">Tratamento, sessão 3 · Dr. Rafael Pinto</span><span class="row__st row__st--ok">Confirmado</span><button type="button" class="row__cancel" data-cancel>Cancelar</button></li>
-      </ol>
-      <aside class="agenda__side">
-        <h2 class="agenda__h">Lista de espera</h2>
-        <ol class="wait" data-wait>
-          <li data-name="Ana Lima" data-kind="check-up">Ana Lima <span>check-up, de manhã</span></li>
-          <li data-name="Lucas Pereira" data-kind="limpeza">Lucas Pereira <span>limpeza, à tarde</span></li>
-          <li data-name="Sofia Martins" data-kind="primeira consulta">Sofia Martins <span>primeira consulta, qualquer dia</span></li>
-        </ol>
-        <h2 class="agenda__h">Mensagens</h2>
-        <div class="chat" data-chat aria-live="polite"><p class="chat__note">Cancele um horário à esquerda e veja a lista de espera preencher a vaga.</p></div>
-      </aside>
-    </div>
-    <div class="agenda__foot"><span>Dados fictícios.</span><button type="button" class="agenda__reset link" data-reset>Recomeçar o dia</button></div>
-    <svg class="pointer" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"><path d="M5 3l14 9-6 1 3 7-3 1-3-7-5 4z" fill="#fff" stroke="#042B54" stroke-width="1.6" stroke-linejoin="round"/></svg>
-  </div>
-  <noscript><p class="col hero__noscript">Sem script, a agenda acima fica parada. O que ela mostra: ao cancelar um horário, a lista de espera recebe a mensagem, quem confirma primeiro fica com o horário e a recepção aprova.</p></noscript>
 </section>
 
-<section class="intro" aria-label="O que é a Presença">
-  <div class="intro__text">
-    <p class="intro__lead" data-reveal><span translate="no">A Presença</span> é a agenda da sua clínica: é nela que os atendimentos são marcados, confirmados e remanejados.</p>
-    <p data-reveal style="--i:1">Cada mudança vira uma mensagem para o paciente certo. Um assistente automático escreve e lê essas mensagens, dentro das regras que a clínica define, e se apresenta como assistente em toda conversa.</p>
-    <p data-reveal style="--i:2">A recepção aprova o que importa. Quem está no meio de um tratamento nunca é movido automaticamente.</p>
-    <p data-reveal style="--i:3">Feita para qualquer negócio que vive de horário marcado: consultórios, clínicas, fisioterapia, cuidadores, veterinários, salões e barbearias.</p>
-    <p data-reveal style="--i:4">Desenvolvida e operada pela <a class="link-plain" href="https://borysta.com">Borysta</a>.</p>
+<section class="funcs" aria-labelledby="funcs-t">
+  <div class="wrap funcs__in">
+    <div class="funcs__tile">
+      <h2 id="funcs-t">O que a Presença faz</h2>
+      <p>As rotinas de agenda que hoje ocupam a recepção, feitas por mensagens e sempre dentro das regras da clínica.</p>
+      <a class="more" href="#recursos">Todos os recursos</a>
+    </div>
+    <article class="func">
+      <h3>Agenda</h3>
+      <p>Todos os atendimentos da clínica, por profissional e por unidade, em uma só tela.</p>
+    </article>
+    <article class="func">
+      <h3>Lembretes</h3>
+      <p>Na véspera, cada paciente recebe o lembrete do seu horário por mensagem.</p>
+    </article>
+    <article class="func">
+      <h3>Lista de espera</h3>
+      <p>Horário cancelado? A lista de espera preenche na hora.</p>
+    </article>
+    <article class="func">
+      <h3>Confirmação</h3>
+      <p>O paciente confirma, remarca ou cancela com um toque, e a agenda se atualiza sozinha.</p>
+    </article>
   </div>
-  <figure class="fade" data-fade data-reveal style="--i:2">
-    <img class="is-on" src="assets/img/mundo-dentista.jpg" width="960" height="1200" alt="Dentista atendendo uma paciente no consultório">
-    <img src="assets/img/mundo-clinica.jpg" width="960" height="1200" alt="Médica sorrindo no consultório" loading="lazy">
-    <img src="assets/img/mundo-veterinario.jpg" width="960" height="1200" alt="Veterinário conversando com a tutora de um cachorro" loading="lazy">
-    <img src="assets/img/mundo-salao.jpg" width="960" height="1200" alt="Barbeiro cortando o cabelo de um cliente" loading="lazy">
-    <button type="button" class="fade__pause" data-fade-pause aria-pressed="false" hidden>Pausar as fotos</button>
+</section>
+
+<section class="sobre" id="sobre" aria-labelledby="sobre-t">
+  <div class="wrap sobre__in">
+    <h2 class="sobre__head" id="sobre-t">Você foca no atendimento. Nós, na comunicação.</h2>
+    <div class="sobre__text">
+      <p class="lead">A Presença é uma plataforma de gestão de pacientes com IA. Ela assume a conversa com os seus pacientes por mensagens: lembra, confirma, remarca e oferece horários vagos a quem está na lista de espera.</p>
+      <p>O resultado é uma clínica mais eficiente, uma equipe menos sobrecarregada e mais horários ocupados. Tudo de forma simples, transparente e competente.</p>
+      <ul class="pillars">
+        <li><strong>Gerenciado por IA</strong><span>O assistente se apresenta como assistente virtual da clínica e conduz as conversas de agenda.</span></li>
+        <li><strong>Fácil de configurar</strong><span>Equipe, salas e tipos de atendimento.</span></li>
+        <li><strong>Multilíngue</strong><span>Mensagens em português e em outros idiomas.</span></li>
+      </ul>
+    </div>
+    <figure class="sobre__photo">
+      <img src="assets/img/sobre.jpg" width="1000" height="1080" data-reveal="photo" alt="Médica cumprimenta uma paciente sorridente no consultório" loading="lazy" decoding="async">
+    </figure>
+    <aside class="momentos" aria-labelledby="momentos-t">
+      <h3 id="momentos-t">Um atendimento, três momentos</h3>
+      <ol>
+        <li><strong>Marcado</strong><span>O horário entra na agenda da clínica.</span></li>
+        <li><strong>Lembrete enviado</strong><span>Na véspera, o paciente recebe a mensagem.</span></li>
+        <li><strong>Confirmado</strong><span>A resposta volta sozinha para a agenda.</span></li>
+      </ol>
+    </aside>
+  </div>
+</section>
+
+<section class="recursos" id="recursos" aria-labelledby="rec-t">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="rec-t">Seu paciente esqueceu. Sua agenda, não.</h2>
+      <p>Lembrar, confirmar, remarcar e preencher horários vagos: a Presença faz por mensagens, sempre dentro das regras da clínica.</p>
+    </div>
+    <div class="rec-grid">
+      <article class="rec">
+        <h3>Lembretes automáticos</h3>
+        <p>Na véspera, cada paciente recebe o lembrete e responde com um toque: confirmar, remarcar ou cancelar.</p>
+      </article>
+      <article class="rec">
+        <h3>Lista de espera</h3>
+        <p>A lista de espera recebe a oferta, uma mensagem por vez, com o horário reservado por 20 minutos.</p>
+      </article>
+      <article class="rec">
+        <h3>Remanejamento</h3>
+        <p>Profissional faltou? Um plano remaneja todos os atendimentos afetados.</p>
+      </article>
+      <article class="rec">
+        <h3>Assistente de agenda</h3>
+        <p>O assistente propõe horários livres da agenda e remarca quando o paciente pede.</p>
+      </article>
+      <article class="rec">
+        <h3>Tratamento com o seu profissional</h3>
+        <p>Tratamento em andamento? O paciente fica com o seu profissional. Nunca movido por automação.</p>
+      </article>
+      <article class="rec">
+        <h3>Retorno clínico</h3>
+        <p>Retorno no prazo certo: a Presença acompanha quem precisa voltar e quando.</p>
+      </article>
+      <article class="rec">
+        <h3>Regras da clínica</h3>
+        <p>A clínica define quando e quantas mensagens saem. Nas ofertas, a prioridade legal de idosos, gestantes, pessoas com deficiência e crianças vem antes da fila.</p>
+      </article>
+      <article class="rec">
+        <h3>Relatórios</h3>
+        <p>Ocupação, faltas, confirmações e receita recuperada, mês a mês e por profissional.</p>
+      </article>
+      <article class="rec">
+        <h3>A recepção no controle</h3>
+        <p>A recepção desfaz qualquer ação com um clique. Valores e dúvidas clínicas ficam sempre com a equipe.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="plataforma" id="plataforma" aria-labelledby="pla-t">
+  <div class="wrap">
+    <div class="sec-head sec-head--center">
+      <h2 id="pla-t">Veja a Presença por dentro.</h2>
+      <p>Telas reais da plataforma, numa clínica de demonstração com dados fictícios.</p>
+    </div>
+    <div class="tabs" data-tabs>
+      <div class="tabs__list" role="tablist" aria-label="Telas da plataforma" hidden>
+        <button type="button" role="tab" id="t-painel" aria-controls="p-painel">Painel</button>
+        <button type="button" role="tab" id="t-agenda" aria-controls="p-agenda">Agenda</button>
+        <button type="button" role="tab" id="t-lembretes" aria-controls="p-lembretes">Lembretes</button>
+        <button type="button" role="tab" id="t-lista" aria-controls="p-lista">Lista de espera</button>
+        <button type="button" role="tab" id="t-caixa" aria-controls="p-caixa">Caixa de entrada</button>
+        <button type="button" role="tab" id="t-reman" aria-controls="p-reman">Remanejamento</button>
+        <button type="button" role="tab" id="t-relat" aria-controls="p-relat">Relatórios</button>
+      </div>
+
+      <div class="tabs__panel" id="p-painel" role="tabpanel" aria-labelledby="t-painel">
+        <div class="tabs__text">
+          <h3>O dia da clínica em uma tela.</h3>
+          <p>Agendamentos, faltas e confirmações do mês, os pacientes que pedem atenção e o que a lista de espera já recuperou.</p>
+          <dl class="figs">
+            <div><dt>horários recuperados</dt><dd>37</dd></div>
+            <div><dt>taxa de confirmação</dt><dd>87&nbsp;%</dd></div>
+            <div><dt>receita recuperada no mês</dt><dd>R$&nbsp;8.140</dd></div>
+          </dl>
+        </div>
+        <figure class="shot" data-reveal="screen"><img src="assets/img/app/painel.webp" width="1600" height="1000" alt="Painel da Presença com 37 horários recuperados, 412 agendamentos, taxa de faltas de 14,2 por cento e taxa de confirmação de 87 por cento" loading="lazy" decoding="async"></figure>
+      </div>
+
+      <div class="tabs__panel" id="p-agenda" role="tabpanel" aria-labelledby="t-agenda">
+        <div class="tabs__text">
+          <h3>Cancelou? A agenda já sabe.</h3>
+          <p>O horário de Ricardo ficou livre. A lista de espera recebeu a oferta, Larissa aceitou e o horário voltou a ser ocupado, sem nenhuma ligação.</p>
+          <div class="toggle" role="group" aria-label="Estado da agenda" data-toggle hidden>
+            <button type="button" aria-pressed="false" data-show="0">Cancelado agora</button>
+            <button type="button" aria-pressed="true" data-show="1">Recuperado</button>
+          </div>
+          <dl class="figs">
+            <div><dt>recuperados neste horário</dt><dd>+R$&nbsp;380</dd></div>
+          </dl>
+        </div>
+        <figure class="shot" data-states><img src="assets/img/app/agenda-cancelado.webp" width="1600" height="1000" alt="Agenda do dia com o atendimento de Ricardo Tavares marcado como cancelado agora e a lista de espera ativada" loading="lazy" decoding="async" hidden><img src="assets/img/app/agenda.webp" width="1600" height="1000" alt="Agenda do dia com o horário de Larissa Gomes recuperado pela lista de espera, mais 380 reais" loading="lazy" decoding="async"></figure>
+      </div>
+
+      <div class="tabs__panel" id="p-lembretes" role="tabpanel" aria-labelledby="t-lembretes">
+        <div class="tabs__text">
+          <h3>Os lembretes de amanhã, prontos.</h3>
+          <p>A Presença prepara os lembretes da véspera com os botões Confirmar, Remarcar e Cancelar. A recepção só acompanha.</p>
+          <dl class="figs">
+            <div><dt>atendimentos amanhã</dt><dd>17</dd></div>
+            <div><dt>lembretes programados</dt><dd>17</dd></div>
+            <div><dt>horário do envio</dt><dd>16:00</dd></div>
+          </dl>
+        </div>
+        <figure class="shot"><img src="assets/img/app/lembretes.webp" width="1600" height="1000" alt="Lembretes de amanhã: 17 atendimentos e 17 lembretes programados, cada um com os botões confirmar, remarcar e cancelar" loading="lazy" decoding="async"></figure>
+      </div>
+
+      <div class="tabs__panel" id="p-lista" role="tabpanel" aria-labelledby="t-lista">
+        <div class="tabs__text">
+          <h3>Quem espera, recebe a oferta.</h3>
+          <p>A fila respeita a ordem de chegada, a prioridade legal e o vínculo com o profissional. A oferta vai para um paciente por vez.</p>
+          <dl class="figs">
+            <div><dt>pacientes na lista</dt><dd>4</dd></div>
+            <div><dt>de espera média</dt><dd>5 dias</dd></div>
+            <div><dt>horários recuperados</dt><dd>37</dd></div>
+          </dl>
+        </div>
+        <figure class="shot"><img src="assets/img/app/lista.webp" width="1600" height="1000" alt="Lista de espera com quatro pacientes, espera média de cinco dias e 37 horários recuperados" loading="lazy" decoding="async"></figure>
+      </div>
+
+      <div class="tabs__panel" id="p-caixa" role="tabpanel" aria-labelledby="t-caixa">
+        <div class="tabs__text">
+          <h3>O assistente conversa. A recepção acompanha.</h3>
+          <p>Cada conversa fica registrada, com mensagens em português e em outros idiomas. A equipe assume a conversa quando quiser e desfaz qualquer ação com um clique.</p>
+          <dl class="figs">
+            <div><dt>para desfazer qualquer ação</dt><dd>1 clique</dd></div>
+          </dl>
+        </div>
+        <figure class="shot"><img src="assets/img/app/caixa.webp" width="1600" height="1000" alt="Caixa de entrada com a conversa em que o assistente remarca o horário de um paciente" loading="lazy" decoding="async"></figure>
+      </div>
+
+      <div class="tabs__panel" id="p-reman" role="tabpanel" aria-labelledby="t-reman">
+        <div class="tabs__text">
+          <h3>Profissional faltou? Um plano só.</h3>
+          <p>A Presença monta uma proposta para cada atendimento afetado. A recepção revisa e decide: aceitar, alterar ou ligar.</p>
+          <dl class="figs">
+            <div><dt>atendimentos afetados</dt><dd>11</dd></div>
+            <div><dt>com proposta automática</dt><dd>10</dd></div>
+            <div><dt>requer decisão</dt><dd>1</dd></div>
+          </dl>
+        </div>
+        <figure class="shot"><img src="assets/img/app/remanejamento.webp" width="1600" height="1000" alt="Remanejamento da agenda de uma profissional ausente: 11 atendimentos afetados, 10 com proposta automática e 1 que requer decisão" loading="lazy" decoding="async"></figure>
+      </div>
+
+      <div class="tabs__panel" id="p-relat" role="tabpanel" aria-labelledby="t-relat">
+        <div class="tabs__text">
+          <h3>O que a Presença trouxe de volta.</h3>
+          <p>Receita recuperada, ocupação da cadeira e horas ociosas, mês a mês e por profissional.</p>
+          <dl class="figs">
+            <div><dt>recuperados no ano</dt><dd>R$&nbsp;61.780</dd></div>
+            <div><dt>horários preenchidos pela lista de espera</dt><dd>284</dd></div>
+            <div><dt>ocupação da cadeira</dt><dd>78&nbsp;%</dd></div>
+          </dl>
+        </div>
+        <figure class="shot"><img src="assets/img/app/relatorios.webp" width="1600" height="1000" alt="Relatórios com 61.780 reais recuperados no ano, ocupação da cadeira de 78 por cento e receita por profissional" loading="lazy" decoding="async"></figure>
+      </div>
+    </div>
+    <p class="fine">Telas da clínica de demonstração. Dados fictícios.</p>
+  </div>
+</section>
+
+<section class="porque on-dark" aria-labelledby="pq-t">
+  <div class="wrap porque__in">
+    <div class="porque__text">
+      <h2 id="pq-t">Menos cadeiras vazias. Mais pacientes atendidos.</h2>
+      <ul class="motivos">
+        <li><strong>Mais eficiência</strong><span>Lembretes, confirmações e remarcações acontecem sozinhos, dentro das regras da clínica.</span></li>
+        <li><strong>Menos carga para a equipe</strong><span>A recepção não precisa ligar para cada paciente. As conversas de agenda ficam com a Presença.</span></li>
+        <li><strong>Mais horários ocupados</strong><span>Horário cancelado volta a ser ocupado pela lista de espera.</span></li>
+        <li><strong>Transparente e no controle</strong><span>Cada mensagem fica registrada, e a recepção desfaz qualquer ação com um clique.</span></li>
+      </ul>
+      <div class="acts">
+        <a class="btn btn--lg" href="https://dev.presenca.borysta.com/#/cadastro" data-app="cadastro">Criar conta</a>
+        <a class="btn btn--ghost-light btn--lg" href="#contato">Fale com a gente</a>
+      </div>
+    </div>
+    <figure class="porque__photo">
+      <img src="assets/img/equipe-tablet.jpg" width="900" height="1100" data-reveal="photo" alt="Dois profissionais de saúde sorriem olhando a agenda em um tablet" loading="lazy" decoding="async">
+      <figcaption>
+        <dl class="figs figs--light">
+          <div><dt>horários recuperados pela lista de espera</dt><dd>37</dd></div>
+          <div><dt>de confirmação</dt><dd>87&nbsp;%</dd></div>
+        </dl>
+        <p class="porque__note">Dados fictícios da clínica de demonstração</p>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="segmentos" id="para-quem" aria-labelledby="seg-t">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="seg-t">Para todo negócio que vive de agenda.</h2>
+      <p>Feita para qualquer negócio que vive de horário marcado: consultórios, clínicas, fisioterapia, cuidadores, veterinários, salões e barbearias.</p>
+    </div>
+    <div class="seg-grid">
+      <article class="seg">
+        <img src="assets/img/mundo-dentista.jpg" data-reveal="photo" width="960" height="1200" alt="Dentista atende um paciente em um consultório moderno" loading="lazy" decoding="async">
+        <h3>Dentistas</h3><p>Consultas e retornos</p>
+      </article>
+      <article class="seg">
+        <img src="assets/img/mundo-clinica.jpg" data-reveal="photo" style="--i:1" width="960" height="1200" alt="Médica sorridente com estetoscópio durante uma consulta" loading="lazy" decoding="async">
+        <h3>Clínicas e consultórios</h3><p>Consultas</p>
+      </article>
+      <article class="seg">
+        <img src="assets/img/mundo-veterinario.jpg" data-reveal="photo" style="--i:2" width="960" height="1200" alt="Veterinário examina um cachorro pequeno" loading="lazy" decoding="async">
+        <h3>Veterinários</h3><p>Consultas e vacinas</p>
+      </article>
+      <article class="seg">
+        <img src="assets/img/mundo-cuidadores.jpg" data-reveal="photo" style="--i:3" width="960" height="1200" alt="Cuidadora mede a pressão de um senhor em casa" loading="lazy" decoding="async">
+        <h3>Cuidadores e home care</h3><p>Visitas</p>
+      </article>
+      <article class="seg">
+        <img src="assets/img/mundo-salao.jpg" data-reveal="photo" style="--i:4" width="960" height="1200" alt="Barbeiro corta o cabelo de um cliente" loading="lazy" decoding="async">
+        <h3>Salões e barbearias</h3><p>Horários</p>
+      </article>
+    </div>
+    <p class="fine">Também para fisioterapia e todo serviço com hora marcada.</p>
+  </div>
+</section>
+
+<section class="faixa on-dark" aria-labelledby="faixa-t">
+  <img class="faixa__img" src="assets/img/faixa.jpg" data-reveal="band" width="1920" height="820" alt="" loading="lazy" decoding="async">
+  <div class="wrap faixa__in">
+    <h2 id="faixa-t">Faltou o paciente, sobrou o prejuízo.</h2>
+    <p>Com a Presença, horário cancelado volta a ser ocupado.</p>
+    <div class="acts">
+      <a class="btn btn--lg" href="https://dev.presenca.borysta.com/#/cadastro" data-app="cadastro">Criar conta</a>
+      <a class="btn btn--ghost-light btn--lg" href="#como-funciona">Como funciona</a>
+    </div>
+  </div>
+</section>
+
+<section class="contato on-dark" id="contato" aria-labelledby="ct-t">
+  <div class="contato__panel">
+    <div class="contato__in">
+      <h2 id="ct-t">Conheça a Presença hoje mesmo.</h2>
+      <p>Conte um pouco sobre o seu negócio. Nossa equipe responde e mostra a plataforma para você.</p>
+      <form class="form" action="mailto:anna.santana@borysta.com" method="post" enctype="text/plain" data-mail>
+        <div class="form__grid">
+          <label class="field"><span>Nome</span><input name="Nome" autocomplete="name" required></label>
+          <label class="field"><span>E-mail</span><input type="email" name="E-mail" autocomplete="email" spellcheck="false" required></label>
+          <label class="field"><span>Telefone</span><input type="tel" name="Telefone" autocomplete="tel"></label>
+          <label class="field"><span>Clínica ou negócio</span><input name="Clínica" autocomplete="organization"></label>
+        </div>
+        <button class="btn btn--lg" type="submit">Enviar mensagem</button>
+        <p class="form__note">Nada é salvo neste site. O botão abre o seu e-mail com a mensagem pronta para anna.santana@borysta.com.</p>
+      </form>
+    </div>
+  </div>
+  <figure class="contato__photo">
+    <img src="assets/img/recepcao.jpg" width="900" height="1100" data-reveal="photo" alt="Paciente na recepção de uma clínica, atendida pela recepcionista com um tablet" loading="lazy" decoding="async">
   </figure>
 </section>
 
-<section class="how" aria-labelledby="how-h">
-  <div class="how__stage">
-    <div class="inbox" data-ui data-stage data-state="3">
-      <div class="inbox__bar"><strong>Caixa de entrada</strong><span>Pedro Alves · 10:30</span></div>
-      <div class="inbox__body">
-        <p class="msg msg--in" data-s="1">Hoje não vou poder ir.<time>10:02</time></p>
-        <p class="msg msg--out" data-s="1">Tudo bem, Pedro. Cancelei o seu horário das 10:30. Quando quiser remarcar, é só responder aqui.<time>10:02</time></p>
-        <p class="sys" data-s="1">10:30 ficou livre. Lista de espera: 3 pessoas.</p>
-        <p class="to" data-s="2">Para Ana Lima</p>
-        <p class="msg msg--out" data-s="2">Olá, Ana! Sou o assistente da Clínica Bem-Estar. Abriu um horário hoje às 10:30 para check-up. Quer ficar com ele? Responda SIM.<time>10:03</time></p>
-        <p class="sys" data-s="2">A mesma mensagem foi para Lucas Pereira e Sofia Martins, nessa ordem.</p>
-        <p class="to" data-s="3">Ana Lima</p>
-        <p class="msg msg--in" data-s="3">SIM<time>10:05</time></p>
-        <div class="sys sys--act" data-s="3" aria-live="polite"><span>Ana Lima · 10:30 · check-up</span><button type="button" class="ui-btn" data-approve>Aprovar</button><span class="ok" hidden>Confirmado</span></div>
-      </div>
+<section class="exemplos" aria-labelledby="ex-t">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="ex-t">O que o seu paciente recebe.</h2>
+      <p>Mensagens curtas e claras, no tom da clínica. Valores e dúvidas clínicas ficam sempre com a equipe.</p>
+    </div>
+    <div class="msg-grid">
+      <article class="msg">
+        <header class="msg__head"><strong>Clínica Sorriso Aldeota</strong>Lembrete na véspera</header>
+        <div class="msg__body">
+          <p class="msg__tag">Exemplo de mensagem</p>
+          <p class="b b--in">Olá, João Vitor. Lembrete do seu horário amanhã, sexta-feira, às 10:00, com a Dra. Camila Ferreira. Você confirma?</p>
+          <p class="b-acts"><span>Confirmar</span><span>Remarcar</span><span>Cancelar</span></p>
+          <p class="b b--out">Confirmar</p>
+          <p class="b b--in">Perfeito, João Vitor, horário confirmado para amanhã às 10:00. Chegue uns 10 minutos antes e traga um documento com foto.</p>
+        </div>
+      </article>
+      <article class="msg">
+        <header class="msg__head"><strong>Clínica Sorriso Aldeota</strong>Oferta da lista de espera</header>
+        <div class="msg__body">
+          <p class="msg__tag">Exemplo de mensagem</p>
+          <p class="b b--in">Olá, Larissa. Abriu um horário hoje, às 14:30, com a Dra. Camila Ferreira, para o tratamento que você está aguardando. Quer ficar com ele? Responda SIM para confirmar.</p>
+          <p class="b b--in">Reservado para você por 20 minutos.</p>
+          <p class="b b--out">Sim, posso ir.</p>
+        </div>
+      </article>
+      <article class="msg">
+        <header class="msg__head"><strong>Clínica Sorriso Aldeota</strong>Remarcação pelo assistente</header>
+        <div class="msg__body">
+          <p class="msg__tag">Exemplo de mensagem</p>
+          <p class="b b--out">Oi, não vou conseguir ir hoje. Dá pra remarcar pra quinta de tarde?</p>
+          <p class="b b--in">Olá, Ricardo. Sou o assistente virtual da Clínica Sorriso Aldeota. Posso remarcar. Opções: 1: quinta-feira, às 14:30. 2: quinta-feira, às 16:00. Responda 1 ou 2, ou me diga outro dia.</p>
+          <p class="b b--out">2</p>
+          <p class="b b--in">Remarcado: quinta-feira, às 16:00, com a Dra. Camila Ferreira, no mesmo endereço. Enviamos o lembrete na véspera.</p>
+        </div>
+      </article>
+      <article class="msg">
+        <header class="msg__head"><strong>Clínica Sorriso Aldeota</strong>Valores ficam com a equipe</header>
+        <div class="msg__body">
+          <p class="msg__tag">Exemplo de mensagem</p>
+          <p class="b b--out">Quanto fica a limpeza?</p>
+          <p class="b b--in">Sobre valores, a recepção fala com você diretamente por aqui. Já avisei a equipe.</p>
+        </div>
+      </article>
     </div>
   </div>
-  <div class="how__steps">
-    <h2 id="how-h">Sem trinta ligações</h2>
-    <div class="step" data-step="1"><p class="step__s">O paciente cancela.</p><p class="step__d">A vaga das 10:30 fica livre na agenda.</p></div>
-    <div class="step" data-step="2"><p class="step__s">A lista de espera recebe a mensagem.</p><p class="step__d">Quem espera por aquele tipo de horário é avisado, em ordem.</p></div>
-    <div class="step" data-step="3"><p class="step__s">Quem confirma primeiro fica com o horário.</p><p class="step__d">A recepção vê a nova marcação e aprova.</p></div>
+</section>
+
+<section class="barra" aria-label="Fale com a gente">
+  <div class="wrap barra__in">
+    <p class="barra__t">Fale com a gente! Conheça a Presença hoje mesmo!</p>
+    <a class="barra__mail" href="mailto:anna.santana@borysta.com">anna.santana@borysta.com</a>
+    <a class="btn btn--white btn--lg" href="https://dev.presenca.borysta.com/#/cadastro" data-app="cadastro">Criar conta</a>
   </div>
 </section>
 
-<section class="bands" aria-label="O que a Presença faz pela sua clínica">
-  <div class="band is-on" data-band>
-    <div class="band__in"><p class="band__s">Horário cancelado volta a ser ocupado.</p><p class="band__d">A lista de espera é avisada por mensagem, e quem confirma primeiro fica com o horário.</p></div>
-    <button type="button" class="sw" role="switch" aria-checked="true" data-sw data-ui aria-label="Horário cancelado volta a ser ocupado"><span class="sw__k"></span></button>
-  </div>
-  <div class="band" data-band>
-    <div class="band__in"><p class="band__s">Profissional faltou? Um plano só.</p><p class="band__d">Todos os atendimentos afetados são remanejados de uma vez, e a recepção aprova.</p></div>
-    <button type="button" class="sw" role="switch" aria-checked="false" data-sw data-ui aria-label="Profissional faltou? Um plano só"><span class="sw__k"></span></button>
-  </div>
-  <div class="band is-on" data-band>
-    <div class="band__in"><p class="band__s">Tratamento fica com o seu profissional.</p><p class="band__d">Quem está no meio de um tratamento nunca é movido automaticamente. Essa regra não se desliga.</p></div>
-    <span class="band__always">sempre</span>
-    <button type="button" class="sw" role="switch" aria-checked="true" aria-disabled="true" data-sw data-ui aria-label="Tratamento fica com o seu profissional, sempre ligado"><span class="sw__k"></span></button>
-  </div>
-  <div class="band is-on" data-band>
-    <div class="band__in"><p class="band__s">Agenda nova, cheia na hora.</p><p class="band__d">Quando entra um profissional ou abre mais horário, os pacientes em espera são chamados.</p></div>
-    <button type="button" class="sw" role="switch" aria-checked="true" data-sw data-ui aria-label="Agenda nova, cheia na hora"><span class="sw__k"></span></button>
-  </div>
-  <div class="band" data-band>
-    <div class="band__in"><p class="band__s">Retorno no prazo certo.</p><p class="band__d">Pacientes já atendidos são lembrados quando chega a hora de voltar.</p></div>
-    <button type="button" class="sw" role="switch" aria-checked="false" data-sw data-ui aria-label="Retorno no prazo certo"><span class="sw__k"></span></button>
-  </div>
-  <div class="band band--rules">
-    <div class="band__in"><p class="band__s">A clínica define as regras.</p><p class="band__d">Tipos de atendimento, lembretes e quem aprova cada mudança.</p></div>
-  </div>
-</section>
-
-<section class="three" aria-labelledby="three-h">
-  <h2 id="three-h" data-reveal>Um atendimento, três momentos</h2>
-  <div class="three__item" data-reveal>
-    <span class="three__state">Marcado</span>
-    <div class="appt" data-ui><span class="appt__t">10:00</span><span class="appt__who">Vanessa Rocha</span><span class="appt__chip">Sem confirmação</span><span class="appt__what">Limpeza · Dra. Camila Ferreira</span><span class="appt__note">Lembrete sai hoje às 16:00</span></div>
-  </div>
-  <div class="three__item" data-reveal style="--i:1" data-live>
-    <span class="three__state" data-live-state>Lembrete enviado</span>
-    <div class="appt is-hover" data-ui data-live-row><span class="appt__t">10:00</span><span class="appt__who">Vanessa Rocha</span><span class="appt__chip" data-live-chip aria-live="polite">Aguardando resposta</span><span class="appt__what">Limpeza · Dra. Camila Ferreira</span><span class="appt__note" data-live-note>Mensagem enviada às 16:00</span><span class="appt__acts" data-live-acts><button type="button" class="ui-btn" data-confirm>Confirmar</button><button type="button" class="ui-btn ui-btn--quiet">Remarcar</button><button type="button" class="ui-btn ui-btn--quiet">Cancelar</button></span>
-      <svg class="pointer pointer--row" aria-hidden="true" viewBox="0 0 24 24" width="22" height="22"><path d="M5 3l14 9-6 1 3 7-3 1-3-7-5 4z" fill="#fff" stroke="#042B54" stroke-width="1.6" stroke-linejoin="round"/></svg>
+<section class="passos" id="como-funciona" aria-labelledby="ps-t">
+  <div class="wrap">
+    <div class="sec-head sec-head--center">
+      <h2 id="ps-t">Sem trinta ligações.</h2>
+      <p>Um paciente cancelou. Veja o que acontece na Presença, do aviso ao horário preenchido.</p>
     </div>
-  </div>
-  <div class="three__item" data-reveal style="--i:2">
-    <span class="three__state">Confirmado</span>
-    <div class="appt is-done" data-ui><span class="appt__t">10:00</span><span class="appt__who">Vanessa Rocha</span><span class="appt__chip">Confirmado</span><span class="appt__what">Limpeza · Dra. Camila Ferreira</span><span class="appt__note">Vanessa respondeu SIM às 16:12</span></div>
-  </div>
-</section>
-
-<section class="who" aria-labelledby="who-h">
-  <h2 id="who-h" data-reveal>Para quem é</h2>
-  <div class="who__groups">
-  <div>
-  <p class="who__g" data-reveal>Segmentos</p>
-  <ul class="who__rows" data-reveal style="--i:1">
-    <li><img src="assets/img/marca-dentistas.jpg" width="16" height="16" alt="" loading="lazy"><span>Dentistas</span><span class="who__v">consultas e retornos</span></li>
-    <li><img src="assets/img/marca-clinicas.jpg" width="16" height="16" alt="" loading="lazy"><span>Clínicas e consultórios</span><span class="who__v">consultas</span></li>
-    <li><img src="assets/img/marca-fisioterapia.jpg" width="16" height="16" alt="" loading="lazy"><span>Fisioterapia</span><span class="who__v">sessões</span></li>
-    <li><img src="assets/img/marca-cuidadores.jpg" width="16" height="16" alt="" loading="lazy"><span>Cuidadores e home care</span><span class="who__v">visitas</span></li>
-    <li><img src="assets/img/marca-veterinarios.jpg" width="16" height="16" alt="" loading="lazy"><span>Veterinários</span><span class="who__v">consultas e vacinas</span></li>
-    <li><img src="assets/img/marca-saloes.jpg" width="16" height="16" alt="" loading="lazy"><span>Salões e barbearias</span><span class="who__v">horários</span></li>
-  </ul>
-  </div>
-  <div>
-  <p class="who__g" data-reveal style="--i:2">Por dentro</p>
-  <ul class="who__rows" data-reveal style="--i:3">
-    <li><span class="dot"></span><span>Gerenciado por IA</span><span class="who__v">o assistente se apresenta</span></li>
-    <li><span class="dot"></span><span>Fácil de configurar</span><span class="who__v">equipe, salas e tipos de atendimento</span></li>
-    <li><span class="dot"></span><span>Multilíngue</span><span class="who__v">mensagens em português e em outros idiomas</span></li>
-  </ul>
-  </div>
-  </div>
-</section>
-
-<section class="end" aria-labelledby="end-h">
-  <div class="end__text">
-    <h2 id="end-h" class="end__big" data-reveal>Sua agenda, cheia.</h2>
-    <p data-reveal style="--i:1">Depois do botão, você cadastra a clínica, a equipe e os tipos de atendimento e já abre a agenda.</p>
-  </div>
-  <div class="signup" data-ui data-reveal style="--i:2" data-signup>
-    <p class="signup__t">Criar a conta da clínica</p>
-    <label class="signup__l" for="clinic">Nome da clínica</label>
-    <input class="signup__f" id="clinic" name="clinic" type="text" value="Clínica Bem-Estar" autocomplete="organization" spellcheck="false">
-    <div class="seg" role="group" aria-label="Tipo de negócio">
-      <button type="button" class="seg__b" aria-pressed="true" data-seg>Saúde</button>
-      <button type="button" class="seg__b" aria-pressed="false" data-seg>Outros serviços</button>
-    </div>
-    <a class="btn btn--wide" href="https://dev.presenca.borysta.com/#/cadastro">Criar conta</a>
-    <p class="signup__s">Já tem conta? <a class="link-plain" href="https://dev.presenca.borysta.com/#/login">Entrar</a></p>
+    <ol class="passos__list">
+      <li class="passo">
+        <figure class="passo__img" data-reveal="screen"><img src="assets/img/app/passo-1.webp" width="900" height="561" alt="Agenda com o atendimento de Ricardo Tavares marcado como cancelado agora" loading="lazy" decoding="async"></figure>
+        <h3>Um paciente cancelou.</h3>
+        <p>O horário de Ricardo fica livre, e a Presença percebe na hora.</p>
+      </li>
+      <li class="passo">
+        <figure class="passo__img" data-reveal="screen" style="--i:1"><img src="assets/img/app/passo-2.webp" width="752" height="676" alt="Painel da lista de espera ativada, com a oferta enviada para Thaís" loading="lazy" decoding="async"></figure>
+        <h3>A lista de espera recebe a oferta.</h3>
+        <p>Uma mensagem por vez, com o horário reservado por 20 minutos.</p>
+      </li>
+      <li class="passo">
+        <figure class="passo__img" data-reveal="screen" style="--i:2"><img src="assets/img/app/passo-3.webp" width="900" height="561" alt="Horário de Larissa Gomes recuperado pela lista de espera, mais 380 reais" loading="lazy" decoding="async"></figure>
+        <h3>Horário preenchido.</h3>
+        <p>Larissa confirmou, e o horário voltou a ser ocupado. Nenhuma pessoa da clínica tocou no telefone.</p>
+      </li>
+    </ol>
+    <p class="fine">Telas da clínica de demonstração. Dados fictícios.</p>
   </div>
 </section>
 
 </main>
 
-<footer class="foot">
-  <span translate="no">Presença, por Borysta</span>
-  <nav class="foot__links" aria-label="Borysta"><a class="link" href="https://borysta.com">borysta.com</a><a class="link" href="https://www.instagram.com/borysta.ia" rel="noopener">@borysta.ia</a><a class="link" href="mailto:anna.santana@borysta.com">anna.santana@borysta.com</a></nav>
-  <span class="foot__r">2026 Borysta AI Agency LTDA · Fotos: Pexels</span>
+<footer class="foot on-dark">
+  <div class="wrap">
+    <div class="foot__login">
+      <div>
+        <h2 class="foot__h">Área da clínica</h2>
+        <p>Entre para ver a agenda, as conversas e os relatórios da sua clínica.</p>
+      </div>
+      <form class="foot__form" action="https://dev.presenca.borysta.com/#/login" data-login-form>
+        <label class="sr" for="f-mail">E-mail</label>
+        <input id="f-mail" type="email" placeholder="seu@email.com.br" autocomplete="email" spellcheck="false">
+        <button class="btn btn--lg" type="submit">Entrar</button>
+      </form>
+    </div>
+    <div class="foot__grid">
+      <div class="foot__brand">
+        <a class="foot__logo" href="#inicio" aria-label="Presença por Borysta, início">
+          <img src="assets/logo/borysta.png" width="720" height="254" alt="">
+          <span aria-hidden="true"></span>
+          <img src="assets/logo/presenca-white.svg" width="1376" height="446" alt="">
+        </a>
+        <p>A Presença é uma plataforma de gestão de pacientes com IA, desenvolvida e operada pela Borysta AI Agency.</p>
+      </div>
+      <nav aria-labelledby="fs-t">
+        <h3 id="fs-t">Segmentos</h3>
+        <ul>
+          <li><a href="#para-quem">Dentistas</a></li>
+          <li><a href="#para-quem">Clínicas e consultórios</a></li>
+          <li><a href="#para-quem">Fisioterapia</a></li>
+          <li><a href="#para-quem">Cuidadores e home care</a></li>
+          <li><a href="#para-quem">Veterinários</a></li>
+          <li><a href="#para-quem">Salões e barbearias</a></li>
+        </ul>
+      </nav>
+      <nav aria-labelledby="fl-t">
+        <h3 id="fl-t">Links</h3>
+        <ul>
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#recursos">Recursos</a></li>
+          <li><a href="#plataforma">Plataforma</a></li>
+          <li><a href="#como-funciona">Como funciona</a></li>
+          <li><a href="https://dev.presenca.borysta.com/#/login" data-login>Entrar</a></li>
+          <li><a href="https://dev.presenca.borysta.com/#/cadastro">Criar conta</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h3>Contato</h3>
+        <ul>
+          <li><a href="mailto:anna.santana@borysta.com">anna.santana@borysta.com</a></li>
+          <li><a href="https://www.instagram.com/borysta.ia" rel="noopener">Instagram @borysta.ia</a></li>
+          <li><a href="https://borysta.com">borysta.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot__bottom">
+      <p>© 2026 Borysta AI Agency LTDA</p>
+      <p>Fotos e vídeo: Pexels. Telas: clínica de demonstração, dados fictícios.</p>
+      <ul class="foot__legal">
+        <li><a href="politica-de-privacidade.html">Política de Privacidade</a></li>
+        <li><a href="termos-de-uso.html">Termos de Uso</a></li>
+        <li><a href="#inicio">Voltar ao topo</a></li>
+      </ul>
+    </div>
+  </div>
 </footer>
+
+<dialog class="login" id="login" aria-labelledby="login-t" data-dialog>
+  <div class="login__side">
+    <p class="login__h">Menos cadeiras vazias. Mais pacientes atendidos.</p>
+    <p>Lembretes, confirmações, recuperação de horários pela lista de espera e um assistente que conduz as conversas de agenda por mensagens.</p>
+  </div>
+  <form class="login__card" action="https://dev.presenca.borysta.com/#/login" data-login-go>
+    <button class="login__x" type="button" data-close>Fechar</button>
+    <div class="login__brand"><img src="assets/logo/borysta.png" width="720" height="254" alt="Borysta"><span>Um produto da<strong>Borysta AI Agency</strong></span></div>
+    <h2 id="login-t">Entrar</h2>
+    <label class="field field--light"><span>E-mail</span><input id="l-mail" type="email" placeholder="seu@email.com.br" autocomplete="off" spellcheck="false"></label>
+    <label class="field field--light"><span>Senha</span><input id="l-pass" type="password" autocomplete="off"></label>
+    <div class="login__row">
+      <label class="check"><input type="checkbox"> Lembrar este dispositivo</label>
+      <a href="https://dev.presenca.borysta.com/#/login">Esqueceu a senha?</a>
+    </div>
+    <button class="btn btn--navy btn--lg btn--block" type="submit">Entrar</button>
+    <p class="login__note">O acesso acontece no ambiente seguro da plataforma.</p>
+    <p class="login__alt">Ainda não tem conta? <a href="https://dev.presenca.borysta.com/#/cadastro">Criar conta da clínica</a></p>
+  </form>
+</dialog>
 
 <script src="assets/site.js" defer></script>
 </body>
