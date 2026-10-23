@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "presenca-site",
+      "runtimeExecutable": "/Users/christophborys/.local/bin/node",
+      "runtimeArgs": [
+        "/Users/christophborys/Code/presenca-site/tools/serve.mjs",
+        "8766"
+      ],
+      "port": 8766
+    }
+  ]
+}
