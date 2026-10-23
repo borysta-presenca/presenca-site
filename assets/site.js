@@ -1,27 +1,17 @@
-// presenca.borysta.com, round 2. The page reads and works without this file; the script adds the login
-// window, the tabs, the carousels, the counters, the entrances and the mail from the contact form.
-// Nothing here talks to a server: the login window only leads to the app, and the form only opens the
-// visitor's own mail program.
+// presenca.borysta.com, round 2b. The page reads and works without this file; the script adds the mobile menu,
+// the mark on the menu for the section in view, the pictures that open once, the tabs, the agenda before and after,
+// the login window and the mail from the contact form. Nothing here talks to a server: the login window only leads to the app, and the
+// form only opens the visitor's own mail program.
 (() => {
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const smooth = reduced ? 'auto' : 'smooth';
 
-  // --- header: shadow once the page moves, the back-to-top button, the mobile drawer ---
-  const head = $('[data-head]');
-  const totop = $('[data-totop]');
-  const onScroll = () => {
-    head.classList.toggle('is-stuck', scrollY > 8);
-    totop.classList.toggle('is-on', scrollY > 900);
-  };
-  addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
+  // --- the mobile menu: the button says what it does, Escape and a chosen link close it ---
   const burger = $('[data-burger]');
   const drawer = $('[data-drawer]');
   const setMenu = (open) => {
     burger.setAttribute('aria-expanded', String(open));
+    burger.textContent = open ? 'Fechar' : 'Menu';
     drawer.hidden = !open;
     document.body.classList.toggle('menu-open', open);
   };
@@ -39,54 +29,14 @@
     links.forEach((a) => { const s = $(a.hash); if (s) spy.observe(s); });
   }
 
-  // --- entrances: reveal once when a part enters the viewport, never leave content hidden ---
-  const targets = $$('[data-reveal]');
-  if (!('IntersectionObserver' in window) || reduced) targets.forEach((el) => el.classList.add('is-in'));
-  else {
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
-    targets.forEach((el) => io.observe(el));
-    addEventListener('load', () => setTimeout(() => targets.forEach((el) => {
-      const r = el.getBoundingClientRect();
-      if (r.top < innerHeight && r.bottom > 0) el.classList.add('is-in');
-    }), 2500));
+  // --- photographs and screens open once when they come into view; without the observer nothing is hidden ---
+  if ('IntersectionObserver' in window) {
+    const shown = new IntersectionObserver((entries) => {
+      for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); shown.unobserve(e.target); }
+    }, { rootMargin: '0px 0px -10% 0px' });
+    $$('[data-reveal]').forEach((el) => shown.observe(el));
+    document.documentElement.classList.add('motion');
   }
-
-  // --- counters: numbers below the fold count up once they are seen ---
-  const counters = $$('[data-count]').filter((el) => el.getBoundingClientRect().top > innerHeight);
-  if (counters.length && !reduced && 'IntersectionObserver' in window) {
-    const fmt = new Intl.NumberFormat('pt-BR');
-    const show = (el, n) => { el.textContent = fmt.format(n) + (el.dataset.suffix || ''); };
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries) if (e.isIntersecting) {
-        io.unobserve(e.target);
-        const el = e.target, end = Number(el.dataset.count), t0 = performance.now();
-        const tick = (t) => {
-          const p = Math.min(1, (t - t0) / 1600);
-          show(el, Math.round(end * (1 - (1 - p) ** 3)));
-          if (p < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      }
-    }, { threshold: 0.6 });
-    counters.forEach((el) => { show(el, 0); io.observe(el); });
-  }
-
-  // --- carousels: the arrows move the track by one card, and switch off at either end ---
-  $$('[data-track]').forEach((track) => {
-    const [prev, next] = $$(`[data-arrows="${track.dataset.track}"] button`);
-    const step = () => track.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap);
-    const update = () => {
-      prev.disabled = track.scrollLeft < 4;
-      next.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4;
-    };
-    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: smooth }));
-    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: smooth }));
-    track.addEventListener('scroll', update, { passive: true });
-    addEventListener('resize', update);
-    update();
-  });
 
   // --- tabs: one screen at a time; without the script all screens stand one below the other ---
   const tabs = $('[data-tabs]');
@@ -102,7 +52,6 @@
         panels[j].hidden = !on;
       });
       if (focus) buttons[i].focus();
-      buttons[i].scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: smooth });
     };
     buttons.forEach((b, i) => {
       b.addEventListener('click', () => select(i));
@@ -114,7 +63,7 @@
       });
     });
     list.hidden = false;
-    buttons.forEach((b, j) => { b.setAttribute('aria-selected', String(j === 0)); b.tabIndex = j === 0 ? 0 : -1; panels[j].hidden = j !== 0; });
+    select(0);
   }
 
   // --- the agenda before and after: cancelled now, recovered by the waiting list ---
