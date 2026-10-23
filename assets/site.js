@@ -1,5 +1,5 @@
 // presenca.borysta.com, round 2b. The page reads and works without this file; the script adds the mobile menu,
-// the mark on the menu for the section in view, the pictures that open once, the tabs, the agenda before and after,
+// the mark on the menu for the section in view, the hero film, the pictures that open once, the tabs, the agenda before and after,
 // the login window and the mail from the contact form. Nothing here talks to a server: the login window only leads to the app, and the
 // form only opens the visitor's own mail program.
 (() => {
@@ -27,6 +27,18 @@
       for (const e of entries) if (e.isIntersecting) links.forEach((a) => a.classList.toggle('is-on', a.hash === `#${e.target.id}`));
     }, { rootMargin: '-45% 0px -50% 0px' });
     links.forEach((a) => { const s = $(a.hash); if (s) spy.observe(s); });
+  }
+
+  // --- the hero film: plays muted in a loop with a button to stop it; a wish for reduced motion keeps it a still ---
+  const film = $('[data-hero-video]');
+  const pause = $('[data-hero-pause]');
+  if (film && pause && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const say = () => { pause.textContent = film.paused ? 'Continuar' : 'Pausar'; };
+    film.addEventListener('play', say);
+    film.addEventListener('pause', say);
+    pause.addEventListener('click', () => (film.paused ? film.play() : film.pause()));
+    pause.hidden = false;
+    film.play().catch(say);
   }
 
   // --- photographs and screens open once when they come into view; without the observer nothing is hidden ---

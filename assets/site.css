@@ -92,7 +92,7 @@ h2 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; font-weight: 800; le
 .drawer__in > a { padding: 10px 0; font-size: 20px; font-weight: 700; color: var(--navy); text-decoration: none; }
 .drawer__acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
 
-/* --- hero: the headline on white, the freed portrait on a navy field, one real section of the Painel above her hand --- */
+/* --- hero: the headline on white, a quiet film of an office desk on the navy field up to the edge of the window --- */
 .hero { overflow: hidden; padding-top: 56px; }
 .hero__in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr); gap: 56px; }
 .hero__text { align-self: center; padding-bottom: 64px; }
@@ -102,13 +102,11 @@ h2 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; font-weight: 800; le
 .hero__line { margin-top: 10px; font-size: 17px; font-weight: 700; color: var(--text); }
 .hero__lead { max-width: 33em; margin: 24px 0 34px; font-size: 20px; }
 .minis { display: flex; flex-wrap: wrap; gap: 6px 28px; margin-top: 30px; font-size: 16px; font-weight: 700; color: var(--navy); }
-.hero__visual { position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding-top: 150px; }
+.hero__visual { --bleed: max(24px, calc((100vw - var(--wrap)) / 2)); position: relative; min-height: 640px; }
 .hero__visual::before { content: ""; position: absolute; top: -56px; bottom: 0; left: 0; right: -50vw; background: var(--navy); }
-.hero__img { position: relative; width: 100%; }
-.hero__ui { position: absolute; z-index: 1; top: 40px; left: 36px; width: 56%; }
-.crop { position: relative; overflow: hidden; aspect-ratio: 760 / 335; background: #fff; }
-.crop img { position: absolute; top: -28.36%; left: -3.95%; width: 210.53%; max-width: none; }
-.hero__ui figcaption { margin-top: 10px; font-size: 14px; color: var(--soft); }
+.hero__video { position: absolute; top: -56px; left: 0; width: calc(100% + var(--bleed)); height: calc(100% + 56px); object-fit: cover; object-position: 62% 50%; }
+.hero__pause { position: absolute; z-index: 1; left: 24px; bottom: 24px; min-height: 40px; padding: 8px 18px; border: 0; border-radius: var(--r); background: var(--navy); color: #fff; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; transition: background-color .2s; }
+.hero__pause:hover { background: var(--navy-deep); }
 
 /* --- what Presença does: the navy tile and four cards on a grey band --- */
 .funcs { padding: 56px 0; background: var(--grey); }
@@ -301,12 +299,10 @@ h2 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; font-weight: 800; le
 .login__note { font-size: 14px; color: var(--muted); text-align: center; }
 .login__alt { font-size: 16px; text-align: center; }
 
-/* --- motion: the two hero pictures arrive on load, every other photograph and screen opens once when it comes into
-   view (site.js sets .motion and .is-in). Nothing is hidden without the script or on paper, and a wish for reduced
-   motion shows everything at once. --- */
+/* --- motion: the hero film plays in a loop (site.js, with a pause button), every photograph and screen below opens once
+   when it comes into view (site.js sets .motion and .is-in). Nothing is hidden without the script or on paper, and a
+   wish for reduced motion shows everything at once and the film as a still. --- */
 @media screen and (prefers-reduced-motion: no-preference) {
-  .hero__img { animation: rise .9s var(--ease-out) .1s backwards; }
-  .crop { animation: open-down .9s var(--ease-in-out) .4s backwards; }
   .motion [data-reveal="photo"] { clip-path: inset(0 0 100% 0); }
   .motion [data-reveal="photo"].is-in { clip-path: inset(0); transition: clip-path 1s var(--ease-in-out) calc(var(--i, 0) * 90ms); }
   .motion [data-reveal="screen"] { opacity: 0; transform: translateY(24px); }
@@ -314,15 +310,12 @@ h2 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; font-weight: 800; le
   .motion [data-reveal="band"] { transform: scale(1.08); }
   .motion [data-reveal="band"].is-in { transform: none; transition: transform 1.6s var(--ease-soft); }
 }
-@keyframes rise { from { opacity: 0; transform: translateY(24px); } }
-@keyframes open-down { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
 
 /* --- widths --- */
 @media (max-width: 1180px) {
   .nav { display: none; }
   .burger { display: block; }
   .head__acts { margin-left: auto; }
-  .hero__ui { left: 24px; width: 54%; }
   .funcs__in { grid-template-columns: repeat(4, 1fr); }
   .funcs__tile { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px 32px; padding: 30px 32px; }
   .funcs__tile p { margin: 0; }
@@ -339,9 +332,9 @@ h2 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; font-weight: 800; le
   .hero { padding-top: 40px; }
   .hero__in { grid-template-columns: 1fr; gap: 0; }
   .hero__text { padding-bottom: 56px; }
-  .hero__visual { width: min(100%, 600px); margin: 0 auto; }
-  .hero__ui { width: 52%; }
-  .hero__visual::before { top: 0; left: -50vw; }
+  .hero__visual { min-height: 0; height: min(62vw, 440px); margin-inline: calc(-1 * var(--bleed)); }
+  .hero__visual::before { top: 0; right: 0; }
+  .hero__video { top: 0; width: 100%; height: 100%; }
   .funcs__in { grid-template-columns: 1fr 1fr; }
   .funcs__tile { grid-template-columns: 1fr; }
   .sec-head { grid-template-columns: 1fr; }
@@ -380,8 +373,6 @@ h2 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; font-weight: 800; le
   .hero__sub { font-size: 22px; }
   .hero__lead { font-size: 17px; }
   .minis { gap: 4px 20px; }
-  .hero__visual { padding-top: 160px; }
-  .hero__ui { top: 24px; left: 0; width: 64%; }
   .funcs { padding: 40px 0; }
   .funcs__in { grid-template-columns: 1fr; }
   .func { padding: 28px 24px; }

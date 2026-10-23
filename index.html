@@ -10,7 +10,7 @@
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/Figtree-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Figtree-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" href="assets/img/medica-1400.webp" imagesrcset="assets/img/medica-760.webp 760w, assets/img/medica-1400.webp 1400w" imagesizes="(max-width: 960px) 92vw, 590px">
+<link rel="preload" as="image" href="assets/video/hero-poster.jpg" fetchpriority="high">
 <link rel="stylesheet" href="assets/site.css">
 <script>document.documentElement.classList.add('js')</script>
 </head>
@@ -82,11 +82,11 @@
       </ul>
     </div>
     <div class="hero__visual">
-      <figure class="hero__ui">
-        <div class="crop"><img src="assets/img/app/painel.webp" width="1600" height="1000" alt="Painel da Presença com 37 horários recuperados e 412 agendamentos" decoding="async"></div>
-        <figcaption>Painel da Presença. Dados fictícios.</figcaption>
-      </figure>
-      <img class="hero__img" src="assets/img/medica-1400.webp" srcset="assets/img/medica-760.webp 760w, assets/img/medica-1400.webp 1400w" sizes="(max-width: 960px) 92vw, 590px" width="1400" height="1165" alt="Médica sorridente com um tablet, sentada à mesa com a agenda e o estetoscópio" fetchpriority="high">
+      <video class="hero__video" muted loop playsinline preload="none" poster="assets/video/hero-poster.jpg" width="1920" height="1080" aria-label="Mulher trabalhando no notebook em um escritório tranquilo" data-hero-video>
+        <source src="assets/video/hero-1080.mp4" type="video/mp4" media="(min-width: 961px)">
+        <source src="assets/video/hero-540.mp4" type="video/mp4">
+      </video>
+      <button class="hero__pause" type="button" data-hero-pause hidden>Pausar</button>
     </div>
   </div>
 </section>
@@ -536,7 +536,7 @@
     </div>
     <div class="foot__bottom">
       <p>© 2026 Borysta AI Agency LTDA</p>
-      <p>Fotos: Pexels. Telas: clínica de demonstração, dados fictícios.</p>
+      <p>Fotos e vídeo: Pexels. Telas: clínica de demonstração, dados fictícios.</p>
       <ul class="foot__legal">
         <li><a href="politica-de-privacidade.html">Política de Privacidade</a></li>
         <li><a href="termos-de-uso.html">Termos de Uso</a></li>
