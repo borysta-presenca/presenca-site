@@ -38,6 +38,8 @@
     film.addEventListener('pause', say);
     pause.addEventListener('click', () => (film.paused ? film.play() : film.pause()));
     pause.hidden = false;
+    // Safari skips a play() that comes before the film has chosen its source (preload="none"); load() makes it choose first
+    film.load();
     film.play().catch(say);
   }
 
