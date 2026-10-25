@@ -1,7 +1,7 @@
-// presenca.borysta.com, round 2b. The page reads and works without this file; the script adds the mobile menu,
-// the mark on the menu for the section in view, the hero film, the pictures that open once, the tabs, the agenda before and after,
-// the login window and the mail from the contact form. Nothing here talks to a server: the login window only leads to the app, and the
-// form only opens the visitor's own mail program.
+// presenca.borysta.com, round 3. The page reads and works without this file; the script adds the mobile menu,
+// the mark on the menu for the section in view, the hero film, the pictures that open once, the switch between without and with,
+// the counter, the tabs, the agenda before and after and the login window. Nothing here talks to a server: the sign-up card and the
+// login window only lead to the app, and nothing typed on this page is sent anywhere.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -48,6 +48,46 @@
     }, { rootMargin: '0px 0px -10% 0px' });
     $$('[data-reveal]').forEach((el) => shown.observe(el));
     document.documentElement.classList.add('motion');
+  }
+
+  // --- without and with: one flow at a time; without the script both stand one below the other ---
+  const sw = $('[data-switch]');
+  if (sw) {
+    const flows = $$('[data-flow]');
+    const show = (key) => {
+      $$('button', sw).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.show === key)));
+      flows.forEach((f) => { f.hidden = f.dataset.flow !== key; });
+    };
+    $$('button', sw).forEach((b) => b.addEventListener('click', () => show(b.dataset.show)));
+    sw.hidden = false;
+    show('sem');
+  }
+
+  // --- the counter of the demo clinic counts up once when it comes into view; the HTML already holds the final value ---
+  const count = $('[data-count]');
+  if (count && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const end = Number(count.dataset.count);
+    const fmt = (n) => `R$\u00a0${n.toLocaleString('pt-BR')}`;
+    const run = () => {
+      const t0 = performance.now();
+      const step = (t) => {
+        const k = Math.min((t - t0) / 1600, 1);
+        count.textContent = fmt(Math.round(end * (1 - (1 - k) ** 3)));
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    // screen readers get the final value once; the moving number is only for the eye
+    const said = document.createElement('span');
+    said.className = 'sr';
+    said.textContent = count.textContent;
+    count.before(said);
+    count.setAttribute('aria-hidden', 'true');
+    count.textContent = fmt(0);
+    const seen = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { seen.disconnect(); run(); }
+    }, { rootMargin: '0px 0px -15% 0px' });
+    seen.observe(count);
   }
 
   // --- tabs: one screen at a time; without the script all screens stand one below the other ---
@@ -100,19 +140,13 @@
       if (matchMedia('(pointer: fine)').matches) (email ? $('#l-pass', dialog) : mail).focus();
     };
     $$('[data-login]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); open(); }));
-    $('[data-login-form]').addEventListener('submit', (e) => { e.preventDefault(); open($('#f-mail').value.trim()); });
     $('[data-close]', dialog).addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
     // nothing typed here is sent anywhere: the app asks for it again on its own, secure page
     $('[data-login-go]', dialog).addEventListener('submit', (e) => { e.preventDefault(); location.href = e.target.action; });
   }
 
-  // --- the contact form: a ready mail to Anna in the visitor's own mail program ---
-  const form = $('[data-mail]');
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const v = (n) => form.elements[n].value.trim() || '-';
-    const body = ['Olá, Anna.', '', 'Quero conhecer a Presença.', '', `Nome: ${v('Nome')}`, `E-mail: ${v('E-mail')}`, `Telefone: ${v('Telefone')}`, `Clínica ou negócio: ${v('Clínica')}`].join('\n');
-    location.href = `mailto:anna.santana@borysta.com?subject=${encodeURIComponent('Presença: quero conhecer a plataforma')}&body=${encodeURIComponent(body)}`;
-  });
+  // --- the sign-up card: the e-mail stays on this page, the visitor continues on the app's own sign-up page ---
+  const signup = $('[data-signup]');
+  signup?.addEventListener('submit', (e) => { e.preventDefault(); location.href = signup.action; });
 })();
