@@ -132,7 +132,9 @@ h2.center { max-width: 22ch; margin-inline: auto; }
 .device__phone { position: absolute; left: 0; bottom: -28px; width: 25%; padding: 2.2%; border-radius: 26px; background: var(--device); }
 .device__phone img { width: 100%; border-radius: 16px; }
 .device__note { margin-top: 44px; font-size: 14px; color: var(--muted); text-align: right; }
-.nutzen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px 56px; margin: 96px 0 64px; }
+.nutzen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 96px 0 64px; }
+.nutzen article { padding: 28px 28px 30px; border: 1px solid rgba(43, 136, 179, .3); border-radius: var(--r); } /* taste-skill-ignore: fine frame approved by Chris for these fields, 26.10.2026 */
+.nutzen__pay { grid-column: 1 / -1; }
 .nutzen h3 { font-size: 24px; line-height: 1.2; }
 .nutzen p { margin-top: 10px; }
 
@@ -206,21 +208,20 @@ h2.center { max-width: 22ch; margin-inline: auto; }
 /* --- questions: native disclosures on grey steps, no rules --- */
 .duvidas { padding-block: 120px; }
 .duvidas__in { max-width: 920px; }
-.duvidas h2 { margin-bottom: 48px; }
+.duvidas h2, .duvidas h1 { margin-bottom: 48px; }
+.duvidas h1 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; font-weight: 800; letter-spacing: -.02em; }
 .duvidas details { margin-top: 8px; border-radius: var(--r); background: var(--grey); }
 .duvidas summary { display: flex; justify-content: space-between; gap: 24px; padding: 24px 28px; font-size: 20px; font-weight: 700; color: var(--navy); cursor: pointer; list-style: none; }
 .duvidas summary::-webkit-details-marker { display: none; }
 .duvidas summary::after { content: "+"; flex: none; font-size: 28px; line-height: .9; font-weight: 400; }
 .duvidas details[open] summary::after { content: "\2212"; }
 .duvidas details p { padding: 0 28px 26px; max-width: 46em; font-size: 17px; }
+.duvidas__all { margin-top: 40px; }
+.duvidas__all + .duvidas__more { margin-top: 24px; }
 .duvidas__more { margin-top: 40px; font-size: 18px; }
 .duvidas__more a { font-weight: 700; color: var(--navy); }
 
 /* --- the contact bar --- */
-.barra { background: var(--blue); color: #fff; }
-.barra__in { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 40px; padding-block: 44px; }
-.barra__t { flex: 1 1 380px; font-size: clamp(24px, 2.2vw, 32px); line-height: 1.2; color: #fff; }
-.barra__mail { font-size: 20px; font-weight: 700; color: #fff; }
 
 /* --- footer: navy, logos, three columns, the legal pages --- */
 .foot { padding-block: 88px 40px; background: var(--navy-deep); color: var(--soft); font-size: 16px; }
@@ -324,7 +325,8 @@ h2.center { max-width: 22ch; margin-inline: auto; }
   .device { padding-left: 14%; }
   .device .device__phone { width: 30%; border-radius: 16px; }
   .device .device__phone img { border-radius: 10px; }
-  .nutzen { grid-template-columns: 1fr; gap: 32px; margin: 64px 0 48px; }
+  .nutzen { grid-template-columns: 1fr; gap: 16px; margin: 64px 0 48px; }
+  .nutzen article { padding: 22px 20px 24px; }
   .nutzen h3 { font-size: 20px; }
   .tabs__list { grid-template-columns: 1fr 1fr; }
   .tabs__list button { border-radius: var(--r); }
@@ -350,8 +352,6 @@ h2.center { max-width: 22ch; margin-inline: auto; }
   .celular__phone { grid-column: auto; grid-row: auto; justify-self: center; width: 240px; }
   .duvidas summary { padding: 20px; font-size: 18px; }
   .duvidas details p { padding: 0 20px 22px; font-size: 16px; }
-  .barra__in { padding-block: 36px; }
-  .barra__in .btn { width: 100%; }
   .foot { padding-top: 64px; }
   .foot__grid { grid-template-columns: 1fr; }
   .login[open] { grid-template-columns: 1fr; }
@@ -359,7 +359,7 @@ h2.center { max-width: 22ch; margin-inline: auto; }
   .login__card { padding: 72px 20px 32px; }
 }
 @media print {
-  .head, .hero__visual, .switch, .barra, .login { display: none !important; }
+  .head, .hero__visual, .switch, .login { display: none !important; }
   .hero, .numeros, .foot { background: #fff; }
   .hero h1, .hero__lead, .numeros h2, .numeros strong, .contador__l, .stats dd { color: var(--navy); }
 }
