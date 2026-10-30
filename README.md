@@ -1,6 +1,6 @@
 # presenca.borysta.com
 
-The public website of Presença, the patient management platform with AI by Borysta. One static page in Brazilian Portuguese, a page with all questions and two legal pages: no build step, no framework, no third-party requests, no cookies.
+The public website of Presença, the smart schedule with an AI assistant by Borysta. One static page in Brazilian Portuguese, a page with all questions and two legal pages: no build step, no framework, no third-party requests, no cookies.
 
 ## What is here
 
