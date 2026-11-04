@@ -25,8 +25,28 @@
 
 <main class="legal" id="conteudo">
   <div class="wrap">
-    <h1>Política de Privacidade</h1>
-    <p class="legal__note">Texto em revisão jurídica</p>
+    <h1>Política de Privacidade e Proteção de Dados (LGPD)</h1>
+    <p class="legal__note">Versão 2026.10-LGPD-v1 • Encarregado de Dados (DPO): privacidade@borysta.com</p>
+    <div style="max-width: 760px; margin: 24px 0 36px; line-height: 1.7;">
+      <h2>1. Papéis de Controladora e Operadora (Lei nº 13.709/2018 — LGPD)</h2>
+      <p>Nos termos da Lei Geral de Proteção de Dados Pessoais (LGPD), a Clínica contratante atua como <strong>Controladora</strong> dos dados pessoais e dados pessoais sensíveis de saúde (Art. 11), enquanto a <strong>Borysta AI Agency Ltda. (CNPJ nº 56.842.193/0001-85)</strong> atua exclusivamente como <strong>Operadora</strong>, realizando o tratamento estritamente conforme as instruções documentadas da Controladora.</p>
+
+      <h2>2. Suboperadores Autorizados e Residência de Dados</h2>
+      <ul>
+        <li><strong>Amazon Web Services (AWS) — <code>sa-east-1</code> (São Paulo, Brasil):</strong> Hospedagem da aplicação (ECS Fargate) e banco de dados isolado por tenant (RDS PostgreSQL com Row-Level Security), criptografados em repouso (AES-256 KMS) e em trânsito (TLS 1.3).</li>
+        <li><strong>AWS Bedrock / Gateway de IA — <code>eu-central-1</code> (Frankfurt, União Europeia):</strong> Leitura automatizada de intenção em respostas de pacientes sob política estrita de <strong>Zero Data Retention (ZDR)</strong>, sem armazenamento ou treinamento de modelos com dados de clientes.</li>
+        <li><strong>Meta Platforms, Inc. (WhatsApp Business Cloud API):</strong> Entrega de mensagens oficiais com criptografia em trânsito e cláusulas-padrão contratuais (Art. 33 da LGPD).</li>
+      </ul>
+
+      <h2>3. Prova Auditável de Consentimento e Opt-Out Imediato</h2>
+      <p>Todo consentimento de paciente é registrado por finalidade (Lembretes Operacionais, Retorno Preventivo, Campanhas Educativas e Pesquisa de Satisfação) contendo data/hora, canal de coleta, operador responsável e o nome explícito da Clínica. Qualquer resposta do paciente manifestando oposição (<code>PARAR</code>, <code>SAIR</code>, <code>NÃO QUERO</code>) revoga imediatamente o envio automático.</p>
+
+      <h2>4. Retenção, Expurgo de Arquivos (30 Dias) e Marco Civil da Internet (6 Meses)</h2>
+      <p>Conteúdos binários de notas fiscais (PDF/XML de NFS-e) e anexos transitados pela plataforma têm seu payload removido automaticamente no prazo máximo de <strong>30 dias</strong>. Em cumprimento ao Art. 15 da Lei nº 12.965/2014 (Marco Civil da Internet), os registros de acesso à aplicação são mantidos sob sigilo pelo prazo legal de <strong>180 dias (6 meses)</strong> e expurgados automaticamente após esse período.</p>
+
+      <h2>5. Contato do Encarregado pelo Tratamento de Dados (DPO)</h2>
+      <p>Para solicitações de titulares de dados, clínicas contratantes ou comunicações da Autoridade Nacional de Proteção de Dados (ANPD), entre em contato pelo e-mail: <a href="mailto:privacidade@borysta.com">privacidade@borysta.com</a>.</p>
+    </div>
     <a class="btn btn--line btn--lg" href="./">Voltar para a página inicial</a>
   </div>
 </main>

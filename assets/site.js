@@ -151,4 +151,42 @@
   // --- the sign-up card: the e-mail stays on this page, the visitor continues on the app's own sign-up page ---
   const signup = $('[data-signup]');
   signup?.addEventListener('submit', (e) => { e.preventDefault(); location.href = signup.action; });
+
+  // --- referral attribution (?ref=CODE): 60-day storage (last click wins) & pass-through to app links ---
+  const REF_STORAGE_KEY = 'presenca_referral_code_v1';
+  const REF_TTL_MS = 60 * 24 * 60 * 60 * 1000;
+  try {
+    const params = new URLSearchParams(location.search);
+    const rawRef = (params.get('ref') || params.get('referral') || '').trim().toUpperCase().replace(/[^A-Z0-9-]/g, '');
+    if (rawRef.length >= 4 && rawRef.length <= 20) {
+      localStorage.setItem(REF_STORAGE_KEY, JSON.stringify({ code: rawRef, capturedAt: Date.now() }));
+    }
+    const storedRaw = localStorage.getItem(REF_STORAGE_KEY);
+    if (storedRaw) {
+      const parsed = JSON.parse(storedRaw);
+      if (parsed && parsed.code && Date.now() - Number(parsed.capturedAt || 0) <= REF_TTL_MS) {
+        const activeRef = String(parsed.code);
+        const decorateUrl = (rawUrl) => {
+          try {
+            const u = new URL(rawUrl, location.href);
+            if (u.hostname.endsWith('presenca.borysta.com') || u.pathname.includes('cadastro') || u.hash.includes('cadastro')) {
+              u.searchParams.set('ref', activeRef);
+              return u.toString();
+            }
+          } catch {}
+          return rawUrl;
+        };
+        $$('a[href]').forEach((a) => {
+          const next = decorateUrl(a.getAttribute('href'));
+          if (next !== a.getAttribute('href')) a.setAttribute('href', next);
+        });
+        $$('form[action]').forEach((f) => {
+          const next = decorateUrl(f.getAttribute('action'));
+          if (next !== f.getAttribute('action')) f.setAttribute('action', next);
+        });
+      } else {
+        localStorage.removeItem(REF_STORAGE_KEY);
+      }
+    }
+  } catch {}
 })();
