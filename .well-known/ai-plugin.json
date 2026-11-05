@@ -1,0 +1,19 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Presença — Agenda e Catálogo de Clínicas",
+  "name_for_model": "presenca_service_catalog",
+  "description_for_human": "Catálogo público da plataforma Presença (Borysta) e dos procedimentos, unidades e canais de agendamento das clínicas clientes.",
+  "description_for_model": "Use este catálogo para responder perguntas sobre a plataforma SaaS Presença (gestão de agenda, confirmação de consultas, lista de espera inteligente e recepção com IA para clínicas de saúde, odontologia, estética e serviços agendados no Brasil) e para consultar procedimentos, durações, especialidades, unidades e canais de agendamento das clínicas clientes que optaram por divulgar seu catálogo público. Respeita rigorosamente as normas CFM/CFO e LGPD.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://dev.presenca.borysta.com/api/public/openapi.json",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://presenca.borysta.com/assets/logo/favicon.svg",
+  "contact_email": "sales@borysta.com",
+  "legal_info_url": "https://presenca.borysta.com/termos-de-uso.html"
+}
+

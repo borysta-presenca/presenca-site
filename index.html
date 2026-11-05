@@ -7,11 +7,79 @@
 <meta name="description" content="A Presença é uma agenda inteligente com assistente de IA: lembretes, confirmações, lista de espera e um assistente que conduz as conversas de agenda por mensagens. Desenvolvida e operada pela Borysta.">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="canonical" href="https://presenca.borysta.com/">
+<link rel="alternate" type="text/plain" href="https://presenca.borysta.com/llms.txt" title="LLM Service Catalog Index">
+<link rel="alternate" type="text/plain" href="https://presenca.borysta.com/llms-full.txt" title="LLM Complete Service Catalog">
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/Figtree-800.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Figtree-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="assets/video/hero-poster.jpg" fetchpriority="high">
 <link rel="stylesheet" href="assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://presenca.borysta.com/#organization",
+      "name": "Borysta AI Agency Ltda.",
+      "brand": "Presença",
+      "taxID": "56.842.193/0001-85",
+      "url": "https://presenca.borysta.com",
+      "email": "sales@borysta.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Santos Dumont, 2828, Sala 1104, Aldeota",
+        "addressLocality": "Fortaleza",
+        "addressRegion": "CE",
+        "postalCode": "60150-161",
+        "addressCountry": "BR"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://presenca.borysta.com/#software",
+      "name": "Presença",
+      "applicationCategory": "BusinessApplication, HealthApplication",
+      "operatingSystem": "Web, iOS, Android",
+      "inLanguage": ["pt-BR", "en"],
+      "description": "A Presença é uma agenda inteligente com assistente de IA: lembretes, confirmações, lista de espera e um assistente que conduz as conversas de agenda por mensagens. Desenvolvida e operada pela Borysta.",
+      "url": "https://presenca.borysta.com",
+      "provider": { "@id": "https://presenca.borysta.com/#organization" },
+      "featureList": [
+        "Agenda multi-profissional e multi-sala",
+        "Lembretes e confirmação ativa de consultas na véspera (D-1)",
+        "Lista de espera inteligente para preenchimento automático de horários vagos",
+        "Plano de realocação de agenda em caso de falta do profissional com preservação de continuidade de tratamento",
+        "Assistente de IA de recepção com conformidade CFM/CFO, ANVISA RDC 657/2022 e LGPD",
+        "Envio de nota fiscal (NFS-e em PDF) ao paciente"
+      ],
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Plano Basic",
+          "price": "299.00",
+          "priceCurrency": "BRL",
+          "url": "https://dev.presenca.borysta.com/#/cadastro"
+        },
+        {
+          "@type": "Offer",
+          "name": "Plano Advanced",
+          "price": "499.00",
+          "priceCurrency": "BRL",
+          "url": "https://dev.presenca.borysta.com/#/cadastro"
+        },
+        {
+          "@type": "Offer",
+          "name": "Plano Enterprise",
+          "price": "999.00",
+          "priceCurrency": "BRL",
+          "url": "https://dev.presenca.borysta.com/#/cadastro"
+        }
+      ]
+    }
+  ]
+}
+</script>
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>

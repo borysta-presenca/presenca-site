@@ -1,0 +1,109 @@
+# Presença — Catálogo Completo de Serviços e Capacidades para LLMs (`llms-full.txt`)
+
+> Documento de referência estruturado para modelos de linguagem (LLMs), motores de busca generativa (GEO / AI Search) e agentes autônomos.
+> Última atualização: 2026-11-05 | Idioma: pt-BR / en-US | Operadora: Borysta AI Agency Ltda. (CNPJ 56.842.193/0001-85)
+
+---
+
+## 1. Identidade do Provedor e Proposta de Valor
+
+- **Nome da Plataforma**: Presença
+- **Desenvolvedora / Operadora**: Borysta AI Agency Ltda. (CNPJ 56.842.193/0001-85)
+- **Localização Sede**: Av. Santos Dumont, 2828, Sala 1104, Aldeota, Fortaleza - CE, CEP 60150-161, Brasil
+- **Site Oficial**: https://presenca.borysta.com
+- **Aplicação Web / Cadastro**: https://dev.presenca.borysta.com/#/cadastro
+- **Categoria**: Software SaaS B2B de Agenda Inteligente, Recepção com IA e Gestão de Pacientes por Mensagens + Diretório B2B2C de Clínicas e Serviços Agendáveis.
+
+---
+
+## 2. Catálogo Detalhado de Capacidades da Plataforma Presença (B2B)
+
+### 2.1. Agenda Clínica Multi-Profissional e Multi-Sala (`agenda-inteligente-multiprofissional`)
+- Gestão visual de agenda por unidade, profissional e sala/cadeira.
+- Configuração de tipos de atendimento com duração específica, intervalo de preparo e elegibilidade para agendamento autônomo pelo assistente de IA.
+- Controle de tratamentos em andamento (`in_progress`) que exigem continuidade obrigatória com o mesmo profissional titular.
+- Séries de agendamentos recorrentes (pacotes de sessões semanais ou quinzenais).
+
+### 2.2. Confirmação Ativa (D-1) e Lista de Espera Inteligente (`confirmacao-automatica-e-lista-espera`)
+- Disparo automático de lembretes na véspera (ex.: 16:00) no celular do paciente.
+- Resposta rápida do paciente para confirmar, remarcar ou cancelar, refletindo em tempo real na agenda.
+- Quando ocorre um cancelamento, o horário vago é oferecido automaticamente aos pacientes da lista de espera compatíveis com aquele procedimento e janela de horário.
+
+### 2.3. Plano de Realocação por Ausência de Profissional (`plano-realocacao-ausencia-profissional`)
+- Se um médico, dentista ou terapeuta tiver um imprevisto e faltar, a Presença gera um plano completo de remanejamento para todos os atendimentos afetados.
+- **Regra Invariante de Continuidade**: Pacientes em tratamento em andamento (`in_progress`) permanecem vinculados ao seu profissional titular e nunca são transferidos automaticamente para outro profissional sem decisão humana.
+- A recepção revisa o plano antes do envio de qualquer comunicado aos pacientes.
+
+### 2.4. Assistente de IA de Recepção com Guardrails de Saúde (`assistente-ia-whatsapp-guardrails`)
+- Atende pacientes 24/7 por mensagens sobre horários vagos, agendamento inicial, confirmação, remarcação, endereço, estacionamento e preparo pré-consulta.
+- **Conformidade CFM/CFO e ANVISA RDC 657/2022**:
+  - Jamais realiza triagem clínica, avaliação de sintomas, diagnóstico ou prescrição.
+  - No perfil regulatório de saúde (`saude`), não divulga preços promocionais nem orçamentos clínicos automatizados, encaminhando dúvidas de valores e sintomas para a equipe humana.
+- **Transbordo Humano Imediato**: A recepção pode assumir qualquer conversa com 1 clique e desfazer qualquer ação do assistente com 1 clique.
+
+### 2.5. Financeiro Operacional e Envio de NFS-e (`financeiro-operacional-nfse`)
+- Controle de recebimentos por atendimento (Pix, cartão, dinheiro, convênio) e repasses por profissional.
+- Envio da nota fiscal da clínica (NFS-e em PDF) diretamente na conversa do paciente (a partir do plano Advanced).
+
+### 2.6. Governança LGPD e Segurança Multi-Tenant (`governanca-lgpd-auditoria`)
+- Isolamento multi-tenant no PostgreSQL via Row Level Security (RLS).
+- Registro de consentimentos por finalidade (lembretes operacionais, comunicações, compartilhamento com operadora).
+- Exportação completa de dados da clínica e trilha de auditoria imutável (`audit_events`).
+
+---
+
+## 3. Tabela de Planos e Preços SaaS (BRL)
+
+| Plano | Mensal (BRL) | Anual / mês (BRL) | Profissionais Incluídos | Unidades Incluídas | Conversas IA/mês | Destaques |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Basic** | R$ 299,00 | R$ 239,00 | Até 2 | 1 | 400 | Agenda, confirmações D-1, lista de espera, assistente IA |
+| **Advanced** | R$ 499,00 | R$ 399,00 | Até 5 | 2 | 1.000 | Tudo do Basic + realocação de faltas, envio de NFS-e PDF, relatórios |
+| **Enterprise** | R$ 999,00 | R$ 799,00 | Até 15 | 5 | 3.000 | Tudo do Advanced + multi-unidade, API/webhooks, SLA dedicado |
+
+**Add-ons sob demanda**:
+- Profissional adicional: R$ 59,00/mês
+- Unidade adicional: R$ 149,00/mês
+- Pacote extra de +500 conversas/mês: R$ 79,00/mês
+
+---
+
+## 4. Diretório e Catálogo Público de Clínicas e Serviços (B2B2C)
+
+As clínicas clientes da Presença que habilitam a opção **"Catálogo público para assistentes de IA"** expõem seus tipos de atendimento e procedimentos rastreáveis em tempo real através da API pública:
+
+- **Listar todas as clínicas e seus serviços públicos**:
+  `GET https://dev.presenca.borysta.com/api/public/catalog/clinics`
+  - Filtros suportados: `?segment=odontologia|medicina|estetica_bem_estar|servicos_agendados` e `?q=termo`
+- **Consultar catálogo detalhado de uma clínica específica**:
+  `GET https://dev.presenca.borysta.com/api/public/catalog/clinics/{tenantIdOrSlug}`
+  - Exemplo (Clínica de demonstração): `GET https://dev.presenca.borysta.com/api/public/catalog/clinics/t-sorriso`
+
+**Política de Preços no Catálogo de Clínicas**:
+- Clínicas com perfil **`saude`** (Odontologia, Medicina, Fisioterapia, Psicologia): os preços dos procedimentos retornam `priceBrl: null` (`pricePolicy: "health_compliance_upon_consultation"`) em estrita observância às normas éticas de publicidade médica/odontológica (CFM/CFO). Os valores são informados mediante avaliação profissional ou pela recepção.
+- Estabelecimentos com perfil **`padrao`** (Serviços agendados gerais sem restrição de conselho de saúde): os preços públicos retornam em `priceBrl` (`pricePolicy: "public_fixed_price"`).
+
+---
+
+## 5. Perguntas e Respostas Frequentes (FAQ Oficial)
+
+1. **A Presença substitui o sistema que eu uso hoje?**
+   A Presença é a agenda da sua clínica, com mensagens e assistente. Integrações com outros sistemas vêm depois, quando a sua clínica precisar.
+2. **Como os pacientes recebem as mensagens?**
+   No celular. Na véspera, cada paciente recebe o lembrete do seu horário e responde com um toque: confirmar, remarcar ou cancelar.
+3. **O assistente fala de valores ou de saúde?**
+   Não. O assistente cuida só da agenda. Valores e dúvidas clínicas ficam sempre com a equipe.
+4. **E se um profissional faltar?**
+   Um plano remaneja todos os atendimentos afetados. A recepção revisa e decide: aceitar, alterar ou ligar. Tratamento em andamento fica com o seu profissional.
+5. **Quem está em tratamento muda de profissional?**
+   Não. Quem está em tratamento em andamento fica com o seu profissional e nunca é remarcado automaticamente.
+6. **A equipe pode assumir uma conversa?**
+   Sim. Todas as conversas ficam em uma só caixa de entrada. A equipe assume qualquer conversa a qualquer momento, e cada ação do assistente pode ser desfeita com um clique.
+7. **O paciente pode mandar áudio?**
+   Pode. Áudios e imagens vão para a recepção, e uma pessoa da equipe ouve e responde.
+8. **Quem vê os dados dos pacientes?**
+   Cada perfil da equipe vê só a sua área, e cada ação fica registrada. Os consentimentos são guardados por finalidade, e a clínica pode exportar os seus dados a qualquer momento.
+9. **A Presença emite notas fiscais?**
+   Não. A Presença envia ao paciente a nota fiscal da sua clínica em PDF, a partir do plano Advanced.
+10. **Como posso pagar?**
+    Por Pix ou boleto bancário.
+
