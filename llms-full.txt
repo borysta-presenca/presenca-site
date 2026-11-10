@@ -1,14 +1,15 @@
 # Presença — Catálogo Completo de Serviços e Capacidades para LLMs (`llms-full.txt`)
 
 > Documento de referência estruturado para modelos de linguagem (LLMs), motores de busca generativa (GEO / AI Search) e agentes autônomos.
-> Última atualização: 2026-11-10 | Idioma: pt-BR / en-US | Operadora: Borysta AI Agency Ltda. (CNPJ 56.842.193/0001-85)
+> Última atualização: 2026-11-10 | Idioma: pt-BR / en-US | Operadora: Borysta AI Agency Ltda. (CNPJ 61.487.538/0001-67)
 
 ---
 
 ## 1. Identidade do Provedor e Proposta de Valor
 
 - **Nome da Plataforma**: Presença
-- **Desenvolvedora / Operadora**: Borysta AI Agency Ltda. (CNPJ 56.842.193/0001-85)
+- **Desenvolvedora / Operadora**: Borysta AI Agency Ltda. (CNPJ 61.487.538/0001-67)
+- **Localização Sede**: Av. Santos Dumont, 2828, Sala 701, Aldeota, Fortaleza - CE, CEP 60150-161, Brasil
 - **Site Oficial**: https://presenca.borysta.com
 - **Aplicação Web / Cadastro**: https://dev.presenca.borysta.com/#/cadastro
 - **Categoria**: Agenda inteligente com assistente de IA.
@@ -62,7 +63,7 @@ Mais que uma agenda, a Presença é a parceira que aumenta a eficiência da sua 
 
 ## 3. Planos
 
-Os planos e valores são apresentados pela equipe comercial. Fale com sales@borysta.com.
+Os planos e valores são apresentados pela equipe comercial. Fale com sales@borysta.com. Formas de pagamento: Pix Automático, Pix e boleto bancário.
 
 ---
 
@@ -87,7 +88,7 @@ Os planos e valores são apresentados pela equipe comercial. Fale com sales@bory
 9. **A Presença emite notas fiscais?**
    Não. A Presença envia ao paciente a nota fiscal da sua clínica em PDF, a partir do plano Advanced.
 10. **Como posso pagar?**
-    Por Pix ou boleto bancário.
+    Por Pix Automático, Pix ou boleto bancário.
 
 ---
 
