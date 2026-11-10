@@ -141,7 +141,7 @@ h2.center { max-width: 22ch; margin-inline: auto; }
 /* --- inside the platform: tabs as a bar of fields, text with figures, the screen; one example message after it --- */
 .plataforma { padding-block: 120px; background: var(--grey); }
 .tabs { margin-top: 48px; }
-.tabs__list { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.tabs__list { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; }
 .tabs__list button { min-height: 60px; padding: 10px 8px; border: 0; border-radius: var(--r) var(--r) 0 0; background: var(--grey-2); color: var(--navy); font-size: 16px; font-weight: 700; line-height: 1.2; cursor: pointer; transition: background-color .2s, color .2s; }
 .tabs__list button:hover { background: #D7DCE1; }
 .tabs__list button[aria-selected="true"] { background: var(--navy); color: #fff; }
@@ -158,7 +158,7 @@ h2.center { max-width: 22ch; margin-inline: auto; }
 .toggle button[aria-pressed="true"] { background: var(--navy); color: #fff; }
 .shot { padding: 20px; background: var(--grey); }
 .shot img { width: 100%; }
-.voz { display: grid; grid-template-columns: 1.3fr .7fr; gap: 48px; align-items: center; margin-top: 24px; padding: 40px 48px; background: var(--navy); }
+.figs__note { margin-top: 22px; font-size: 13px; line-height: 1.5; color: var(--muted); }.voz { display: grid; grid-template-columns: 1.3fr .7fr; gap: 48px; align-items: center; margin-top: 24px; padding: 40px 48px; background: var(--navy); }
 .voz__msg { display: grid; gap: 10px; margin: 0; }
 .b { max-width: 34em; padding: 14px 18px; border-radius: var(--r); font-size: 17px; line-height: 1.5; }
 .b--in { background: #fff; color: var(--navy); }
