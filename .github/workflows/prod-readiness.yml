@@ -2,9 +2,10 @@ name: Production Readiness & LGPD Gate
 
 on:
   push:
-    branches: [develop, hml, main]
+    branches: [develop, hml, main, 'feature/**', 'feat/**', 'fix/**', 'hotfix/**']
   pull_request:
     branches: [develop, hml, main]
+  workflow_dispatch:
 
 permissions:
   contents: read
