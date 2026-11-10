@@ -57,13 +57,9 @@ test('validates JSON-LD in index.html and referral sanitizer in assets/site.js',
   assert.ok(match, 'index.html must include JSON-LD structured data');
   const parsed = JSON.parse(match[1]);
   const org = parsed['@graph'].find((n) => n['@type'] === 'Organization');
-  const app = parsed['@graph'].find((n) => n['@type'] === 'SoftwareApplication');
   assert.equal(org.taxID, '61.487.538/0001-67');
   assert.match(org.address.streetAddress, /Sala 701/);
-  assert.deepEqual(
-    app.offers.map((o) => o.price),
-    ['498.00', '1498.00', '2998.00'],
-  );
+  assert.ok(Array.isArray(org.sameAs) && org.sameAs.includes('https://borysta.com'));
 
   const siteJs = readFileSync(join(repoRoot, 'assets/site.js'), 'utf8');
   assert.ok(siteJs.includes('presenca.referral.v1'));

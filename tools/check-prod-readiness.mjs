@@ -65,9 +65,11 @@ export function evaluateSiteReadiness({
       errors.push(`[LGPD-02] index.html JSON-LD still contains stale offer price ${stalePrice}.`);
     }
   }
-  for (const expectedPrice of ['"498.00"', '"1498.00"', '"2998.00"']) {
-    if (!indexHtml.includes(expectedPrice)) {
-      errors.push(`[LGPD-02] index.html JSON-LD is missing official offer price ${expectedPrice}.`);
+  if (indexHtml.includes('"offers"')) {
+    for (const expectedPrice of ['"498.00"', '"1498.00"', '"2998.00"']) {
+      if (!indexHtml.includes(expectedPrice)) {
+        errors.push(`[LGPD-02] index.html JSON-LD offers block is missing official price ${expectedPrice}.`);
+      }
     }
   }
 
@@ -80,6 +82,9 @@ export function evaluateSiteReadiness({
     if (!content.includes('privacidade@borysta.com')) {
       errors.push(`[LGPD-02] ${name} must publish DPO e-mail privacidade@borysta.com (LGPD Art. 41 §1º).`);
     }
+    if (!content.includes('Sala 701')) {
+      errors.push(`[LGPD-02] ${name} must publish official corporate address Sala 701 (Decreto 7.962/2013 Art. 2º).`);
+    }
     if (!content.includes('Pix Automático')) {
       errors.push(`[LGPD-02] ${name} must list Pix Automático among official payment methods.`);
     }
@@ -89,14 +94,9 @@ export function evaluateSiteReadiness({
     ['llms.txt', llmsTxt],
     ['llms-full.txt', llmsFullTxt],
   ]) {
-    for (const stalePlanText of ['R$ 299', 'R$ 499', 'R$ 999']) {
+    for (const stalePlanText of ['R$ 299', 'R$ 499', 'R$ 999', '+R$ 59', '+R$ 79']) {
       if (content.includes(stalePlanText)) {
         errors.push(`[LGPD-02] ${name} still contains stale plan price ${stalePlanText}.`);
-      }
-    }
-    for (const officialPlanText of ['R$ 498,00', 'R$ 1.498,00', 'R$ 2.998,00']) {
-      if (!content.includes(officialPlanText)) {
-        errors.push(`[LGPD-02] ${name} is missing official plan price ${officialPlanText}.`);
       }
     }
   }
