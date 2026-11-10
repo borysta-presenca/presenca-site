@@ -17,6 +17,7 @@ The public website of Presença, the smart schedule with an AI assistant by Bory
 | `assets/img/app/` | Screens of the click dummy (`Borysta_App_Presenca-Demo_PT-EN.html`, state of 07.10.2026) with its demo clinic and fictitious data, 1600 × 1000 px as WebP, and `meu-dia.webp`, the role Dentista on a phone (780 × 1688 px) |
 | `assets/logo/` | Presença mark (navy and white), Borysta wordmark, favicon |
 | `tools/serve.mjs` | Local preview: `node tools/serve.mjs 8766` then open http://127.0.0.1:8766 |
+| `tools/check-prod-readiness.mjs` | LGPD & production readiness gate (`node tools/check-prod-readiness.mjs`): verifies official corporate data, plans and DPO contact on every branch, and blocks merges to `main` while `LGPD-01` legal placeholders or non-production app URLs remain |
 | `tools/photos.py` | Rebuilds `assets/img/` from the picture pools in the Borysta work folder; `python3 tools/photos.py sobre.jpg` rebuilds a single picture, `medica` the hero portrait |
 | `tools/cutout.swift` | Frees the hero portrait from its background with Apple's Vision framework (macOS 14 or later); `photos.py` compiles and calls it |
 | `tools/encode.swift` | Makes the two film sizes with Apple's AVFoundation: `swiftc -O tools/encode.swift -o /tmp/encode`, then `/tmp/encode <in.mp4> assets/video/hero-1080.mp4 1920 1080 3000000` and `... hero-540.mp4 960 540 900000` |
@@ -25,7 +26,7 @@ The public website of Presença, the smart schedule with an AI assistant by Bory
 
 ## The links into the app
 
-"Entrar" and "Criar conta" lead to the app's own screens (`/#/login` and `/#/cadastro`). The app address appears 16 times in `index.html` and 6 times in `duvidas.html` (links, the `action` of the sign-up card and of the login window); search for `dev.presenca.borysta.com` and replace every one with the production address on launch day. Until a production environment exists, the links lead to the development environment, which asks for its shared password.
+"Entrar" and "Criar conta" lead to the app's own screens (`/#/login` and `/#/cadastro`). The app address appears in `index.html`, `duvidas.html`, `llms.txt`, `llms-full.txt` and `.well-known/ai-plugin.json`; search for `dev.presenca.borysta.com` (or `staging.presenca.borysta.com` on `hml`) and replace every one with the production address on launch day (`tools/check-prod-readiness.mjs` enforces this automatically when targeting `main`). Until a production environment exists, the links lead to the development environment on `develop` (`hml` points to staging), which asks for its shared password.
 
 The login window on this page shows the app's login screen. It is a picture of the real thing, not a sign-in: its fields carry no `name`, nothing typed there is sent or stored, and its button only opens the app's own login page, where the visitor signs in. The same holds for the e-mail field of the sign-up card in the hero: nothing typed there leaves the page, the button only opens the app's own sign-up page. The real sign-in and sign-up stay in the app.
 

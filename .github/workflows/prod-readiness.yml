@@ -1,0 +1,42 @@
+name: Production Readiness & LGPD Gate
+
+on:
+  push:
+    branches: [develop, hml, main]
+  pull_request:
+    branches: [develop, hml, main]
+
+permissions:
+  contents: read
+
+jobs:
+  lgpd-and-prod-readiness:
+    name: Corporate Data, Security & LGPD Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Check JS syntax & run unit tests for readiness gate
+        run: |
+          node --check assets/site.js
+          node --check tools/serve.mjs
+          node --test tools/check-prod-readiness.test.mjs
+
+      - name: Run LGPD & Production Readiness Gate
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: node tools/check-prod-readiness.mjs
+
+      - name: Secret Scan (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

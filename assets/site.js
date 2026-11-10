@@ -151,4 +151,40 @@
   // --- the sign-up card: the e-mail stays on this page, the visitor continues on the app's own sign-up page ---
   const signup = $('[data-signup]');
   signup?.addEventListener('submit', (e) => { e.preventDefault(); location.href = signup.action; });
+
+  // --- referral attribution (?ref=CODE): functional propagation to app sign-up/login links (no cookies, no network calls) ---
+  const REF_KEY = 'presenca.referral.v1';
+  const REF_TTL_MS = 60 * 86_400_000;
+  const sanitizeRef = (raw) => {
+    const code = String(raw || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    return code.length >= 3 && code.length <= 40 ? code : null;
+  };
+  let activeRef = null;
+  try {
+    const urlRef = sanitizeRef(new URLSearchParams(location.search).get('ref'));
+    if (urlRef) {
+      activeRef = urlRef;
+      localStorage.setItem(REF_KEY, JSON.stringify({ code: urlRef, expiresAt: Date.now() + REF_TTL_MS }));
+    } else {
+      const saved = JSON.parse(localStorage.getItem(REF_KEY) || 'null');
+      if (saved && saved.expiresAt > Date.now()) activeRef = sanitizeRef(saved.code);
+    }
+  } catch {
+    // storage disabled or private mode: keep activeRef from URL only if valid
+    activeRef = sanitizeRef(new URLSearchParams(location.search).get('ref'));
+  }
+  if (activeRef) {
+    const appendRef = (rawHref) => {
+      try {
+        const u = new URL(rawHref, location.href);
+        if (!u.hash.startsWith('#/cadastro') && !u.hash.startsWith('#/login')) return rawHref;
+        u.searchParams.set('ref', activeRef);
+        return u.toString();
+      } catch {
+        return rawHref;
+      }
+    };
+    $$('a[href*="/#/cadastro"], a[href*="/#/login"]').forEach((a) => { a.href = appendRef(a.href); });
+    $$('form[action*="/#/cadastro"], form[action*="/#/login"]').forEach((f) => { f.action = appendRef(f.action); });
+  }
 })();

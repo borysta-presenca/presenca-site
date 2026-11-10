@@ -1,17 +1,18 @@
 # Presença — Catálogo Completo de Serviços e Capacidades para LLMs (`llms-full.txt`)
 
 > Documento de referência estruturado para modelos de linguagem (LLMs), motores de busca generativa (GEO / AI Search) e agentes autônomos.
-> Última atualização: 2026-11-05 | Idioma: pt-BR / en-US | Operadora: Borysta AI Agency Ltda. (CNPJ 56.842.193/0001-85)
+> Última atualização: 2026-11-10 | Idioma: pt-BR / en-US | Operadora: Borysta AI Agency Ltda. (CNPJ 61.487.538/0001-67)
 
 ---
 
 ## 1. Identidade do Provedor e Proposta de Valor
 
 - **Nome da Plataforma**: Presença
-- **Desenvolvedora / Operadora**: Borysta AI Agency Ltda. (CNPJ 56.842.193/0001-85)
-- **Localização Sede**: Av. Santos Dumont, 2828, Sala 1104, Aldeota, Fortaleza - CE, CEP 60150-161, Brasil
+- **Desenvolvedora / Operadora**: Borysta AI Agency Ltda. (CNPJ 61.487.538/0001-67)
+- **Localização Sede**: Av. Santos Dumont, 2828, Sala 701, Aldeota, Fortaleza - CE, CEP 60150-161, Brasil
 - **Site Oficial**: https://presenca.borysta.com
 - **Aplicação Web / Cadastro**: https://dev.presenca.borysta.com/#/cadastro
+- **Comercial**: sales@borysta.com | **Privacidade / DPO (LGPD)**: privacidade@borysta.com
 - **Categoria**: Software SaaS B2B de Agenda Inteligente, Recepção com IA e Gestão de Pacientes por Mensagens + Diretório B2B2C de Clínicas e Serviços Agendáveis.
 
 ---
@@ -54,16 +55,18 @@
 
 ## 3. Tabela de Planos e Preços SaaS (BRL)
 
-| Plano | Mensal (BRL) | Anual / mês (BRL) | Profissionais Incluídos | Unidades Incluídas | Conversas IA/mês | Destaques |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Basic** | R$ 299,00 | R$ 239,00 | Até 2 | 1 | 400 | Agenda, confirmações D-1, lista de espera, assistente IA |
-| **Advanced** | R$ 499,00 | R$ 399,00 | Até 5 | 2 | 1.000 | Tudo do Basic + realocação de faltas, envio de NFS-e PDF, relatórios |
-| **Enterprise** | R$ 999,00 | R$ 799,00 | Até 15 | 5 | 3.000 | Tudo do Advanced + multi-unidade, API/webhooks, SLA dedicado |
+| Plano | Mensal (BRL) | Anual mês a mês -10% (BRL) | Anual à vista -20% (BRL) | Profissionais | Unidades | Mensagens/mês | Conversas IA/mês | Destaques |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Basic** | R$ 498,00 | R$ 448,20 | R$ 4.780,80/ano | Até 2 | 1 | 1.000 | — | Agenda, confirmações D-1, lista de espera inteligente, plano de realocação |
+| **Advanced** | R$ 1.498,00 | R$ 1.348,20 | R$ 14.380,80/ano | Até 5 | 1 | 3.000 | Até 1.000 | Tudo do Basic + Assistente IA de recepção, envio de NFS-e PDF, relatórios |
+| **Pro** | R$ 2.998,00 | R$ 2.698,20 | R$ 28.780,80/ano | Até 20 | Multi-unidade | 5.000 (+600 Recall) | Até 3.000 | Tudo do Advanced + Módulo Recall incluído, multi-unidade, relatórios consolidados |
+| **Enterprise** | Sob consulta | Sob consulta | Sob consulta | > 20 | Ilimitadas | Customizado | Customizado | Redes de clínicas, integrações/API, SLA dedicado (`sales@borysta.com`) |
 
-**Add-ons sob demanda**:
-- Profissional adicional: R$ 59,00/mês
-- Unidade adicional: R$ 149,00/mês
-- Pacote extra de +500 conversas/mês: R$ 79,00/mês
+**Add-ons e condições comerciais**:
+- **Módulo Recall de retornos periódicos** (incluído no Pro; opcional no Basic e Advanced): +R$ 398,00/mês (+200 mensagens/mês no Basic ou +400 mensagens/mês no Advanced).
+- **Pacote avulso de mensagens**: +1.000 mensagens por R$ 149,00.
+- **Período de avaliação (Trial)**: 7 dias grátis ou 100 mensagens.
+- **Formas de pagamento**: Pix Automático, Pix e boleto bancário.
 
 ---
 
@@ -105,5 +108,5 @@ As clínicas clientes da Presença que habilitam a opção **"Catálogo público
 9. **A Presença emite notas fiscais?**
    Não. A Presença envia ao paciente a nota fiscal da sua clínica em PDF, a partir do plano Advanced.
 10. **Como posso pagar?**
-    Por Pix ou boleto bancário.
+    Por Pix Automático, Pix ou boleto bancário.
 
