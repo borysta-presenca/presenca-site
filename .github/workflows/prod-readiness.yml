@@ -37,7 +37,7 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
         run: node tools/check-prod-readiness.mjs
 
-      - name: Secret Scan (Gitleaks)
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Secret Scan via Docker (Gitleaks working tree + Git history)
+        run: |
+          docker run --rm -v "${{ github.workspace }}:/repo:ro" zricethezav/gitleaks:v8.21.2 detect --source=/repo --no-git --no-banner --redact
+          docker run --rm -v "${{ github.workspace }}:/repo:ro" zricethezav/gitleaks:v8.21.2 detect --source=/repo --no-banner --redact
