@@ -1,17 +1,23 @@
 #!/usr/bin/env node
 /**
- * Production Readiness & LGPD Gate for presenca-site (presenca.borysta.com)
+ * Production Readiness, Environment URL Hygiene, CSP & LGPD Gate for presenca-site (presenca.borysta.com)
  *
- * - Runs on every push/PR (`develop`, `hml`, `main`):
+ * - Runs on every push/PR (`develop`, `homol`, `main`):
  *   1. Always blocks stale corporate data (`56.842.193/0001-85`, `Sala 1104`), stale plan prices
  *      (`299.00`, `499.00`, `999.00`), missing official CNPJ (`61.487.538/0001-67`), missing DPO
  *      contact (`privacidade@borysta.com`), or accidental naming of "WhatsApp" on HTML pages before
  *      Meta approval.
- *   2. Tracks `LGPD-01` (`politica-de-privacidade.html` and `termos-de-uso.html` showing
- *      "Texto em revisão jurídica" or `noindex`) as technical debt warning on `develop` and `hml`,
+ *   2. Enforces `/app/#/login` and `/app/#/cadastro` mount paths (never root `/#/login` or `/#/cadastro`
+ *      which would collide with the Landing Page at `/`) and forbids inline executable `<script>` tags
+ *      so strict `Content-Security-Policy: script-src 'self'` works without `'unsafe-inline'`.
+ *   3. Tracks `LGPD-01` (`politica-de-privacidade.html` and `termos-de-uso.html` showing
+ *      "Texto em revisão jurídica" or `noindex`) as technical debt warning on `develop` and `homol`,
  *      and HARD-BLOCKS (`exit 1`) any PR or push targeting `main` (or `--enforce-prod`).
- *   3. Blocks non-production app URLs (`dev.presenca.borysta.com`, `staging.presenca.borysta.com`)
- *      when targeting `main` (or `--enforce-prod`).
+ *   4. Enforces strict environment URL isolation:
+ *      - Targeting `homol`: blocks any leftover `dev.presenca.borysta.com` URL.
+ *      - Targeting `develop`: blocks accidental `staging.presenca.borysta.com` URL.
+ *      - Targeting `main` (or `--enforce-prod`): blocks both `dev.presenca.borysta.com` and
+ *        `staging.presenca.borysta.com`.
  */
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
@@ -23,7 +29,10 @@ export function evaluateSiteReadiness({
   refName = process.env.GITHUB_REF_NAME || '',
   enforceProd = false,
 } = {}) {
-  const isMainTarget = enforceProd || baseRef === 'main' || refName === 'main';
+  const effectiveTarget = enforceProd ? 'main' : baseRef || refName;
+  const isMainTarget = effectiveTarget === 'main';
+  const isHomolTarget = effectiveTarget === 'homol';
+  const isDevelopTarget = effectiveTarget === 'develop';
   const errors = [];
   const warnings = [];
 
@@ -111,7 +120,34 @@ export function evaluateSiteReadiness({
     }
   }
 
-  // 2. LGPD-01: Legal pages placeholder & noindex check (warning on develop/hml, hard block on main)
+  // 2. Enforce /app/#/ SPA mount path (no root /#/login or /#/cadastro collision) & strict CSP (no inline JS)
+  for (const [name, html] of [
+    ['index.html', indexHtml],
+    ['duvidas.html', duvidasHtml],
+    ['politica-de-privacidade.html', privacyHtml],
+    ['termos-de-uso.html', termsHtml],
+  ]) {
+    const scriptTags = html.match(/<script\b[^>]*>/gi) || [];
+    for (const tag of scriptTags) {
+      const isJsonLd = /type\s*=\s*["']application\/ld\+json["']/i.test(tag);
+      const hasExternalSrc = /\bsrc\s*=\s*["'][^"']+["']/i.test(tag);
+      if (!isJsonLd && !hasExternalSrc) {
+        errors.push(`[CSP] ${name} contains inline executable <script> (${tag}); extract to external JS for script-src 'self'.`);
+      }
+    }
+  }
+
+  for (const [name, content] of [
+    ['index.html', indexHtml],
+    ['duvidas.html', duvidasHtml],
+    ['llms-full.txt', llmsFullTxt],
+  ]) {
+    if (/presenca\.borysta\.com\/#\/(login|cadastro)/.test(content)) {
+      errors.push(`[SPA-PATH] ${name} points to root /#/(login|cadastro) instead of /app/#/(login|cadastro).`);
+    }
+  }
+
+  // 3. LGPD-01: Legal pages placeholder & noindex check (warning on develop/homol, hard block on main)
   for (const [name, html] of [
     ['politica-de-privacidade.html', privacyHtml],
     ['termos-de-uso.html', termsHtml],
@@ -136,7 +172,7 @@ export function evaluateSiteReadiness({
     }
   }
 
-  // 3. Environment URL check when targeting main (production)
+  // 4. Environment URL isolation (develop vs homol vs main)
   const urlBearingFiles = [
     ['index.html', indexHtml],
     ['duvidas.html', duvidasHtml],
@@ -146,17 +182,21 @@ export function evaluateSiteReadiness({
   ];
 
   for (const [name, content] of urlBearingFiles) {
-    if (content.includes('dev.presenca.borysta.com') || content.includes('staging.presenca.borysta.com')) {
-      const msg = `[PROD-URL] ${name} points to non-production host (dev./staging.presenca.borysta.com).`;
-      if (isMainTarget) {
-        errors.push(`${msg} Replace with production app URL before merging to main.`);
-      } else {
-        warnings.push(`${msg} Expected on develop/hml; blocked on main.`);
-      }
+    const hasDevUrl = content.includes('dev.presenca.borysta.com');
+    const hasStagingUrl = content.includes('staging.presenca.borysta.com');
+
+    if (isMainTarget && (hasDevUrl || hasStagingUrl)) {
+      errors.push(`[PROD-URL] ${name} points to non-production host (dev./staging.presenca.borysta.com). Replace with production app URL before merging to main.`);
+    } else if (isHomolTarget && hasDevUrl) {
+      errors.push(`[ENV-URL] ${name} still points to dev.presenca.borysta.com when targeting homol (expected staging.presenca.borysta.com).`);
+    } else if (isDevelopTarget && hasStagingUrl) {
+      errors.push(`[ENV-URL] ${name} points to staging.presenca.borysta.com when targeting develop (expected dev.presenca.borysta.com).`);
+    } else if (hasDevUrl || hasStagingUrl) {
+      warnings.push(`[PROD-URL] ${name} points to non-production host (expected on develop/homol; blocked on main).`);
     }
   }
 
-  return { ok: errors.length === 0, isMainTarget, errors, warnings };
+  return { ok: errors.length === 0, isMainTarget, isHomolTarget, errors, warnings };
 }
 
 const isDirectRun = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
@@ -174,7 +214,6 @@ if (isDirectRun) {
     }
     process.exit(1);
   }
-  console.log(
-    `✅ presenca-site gate passed (mode=${result.isMainTarget ? 'main/production' : 'develop/staging'}, warnings=${result.warnings.length}).`,
-  );
+  const modeLabel = result.isMainTarget ? 'main/production' : result.isHomolTarget ? 'homol/staging' : 'develop';
+  console.log(`✅ presenca-site gate passed (mode=${modeLabel}, warnings=${result.warnings.length}).`);
 }
