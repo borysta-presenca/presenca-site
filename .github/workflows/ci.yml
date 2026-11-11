@@ -1,0 +1,315 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main, develop, homol, 'feature/**', 'hotfix/**']
+  pull_request:
+    branches: [main, develop, homol]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/homol' && github.ref != 'refs/heads/main' }}
+
+jobs:
+  validate:
+    name: Security, Readiness Gate, Tests & IaC Validation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository (full history for Gitleaks)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Security Suite — Gitleaks (Tree + Git History), Opengrep SAST & Bandit (Docker)
+        run: bash tools/security-scan.sh
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Check JS syntax & run unit tests for readiness gate
+        run: |
+          node --check assets/init.js
+          node --check assets/site.js
+          node --check tools/serve.mjs
+          node --check tools/check-prod-readiness.mjs
+          node --test tools/check-prod-readiness.test.mjs
+
+      - name: Production Legal, CSP & Environment Readiness Gate
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+        run: node tools/check-prod-readiness.mjs
+
+      - name: Validate Terraform IaC (dev, staging, prod)
+        run: |
+          docker run --rm -v "${GITHUB_WORKSPACE}/infra/terraform:/workspace" -w /workspace hashicorp/terraform:1.9 fmt -check -recursive
+          for env_dir in dev staging prod; do
+            echo "==> Validating Terraform environment: ${env_dir}"
+            docker run --rm -v "${GITHUB_WORKSPACE}/infra/terraform:/workspace" -w "/workspace/environments/${env_dir}" hashicorp/terraform:1.9 init -backend=false
+            docker run --rm -v "${GITHUB_WORKSPACE}/infra/terraform:/workspace" -w "/workspace/environments/${env_dir}" hashicorp/terraform:1.9 validate
+          done
+
+  deploy-dev:
+    name: Deploy Dev (AWS S3 us-east-1 + EC2 Caddy)
+    needs: validate
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      AWS_REGION: us-east-1
+      DEV_SITE_BUCKET: ${{ vars.DEV_SITE_BUCKET || 'presenca-site-dev-351495784017' }}
+      DEV_INSTANCE_ID: ${{ vars.DEV_INSTANCE_ID || 'i-0b5ba1537a5e40850' }}
+      DEV_DEPLOY_ROLE_ARN: ${{ vars.AWS_DEV_DEPLOY_ROLE_ARN || 'arn:aws:iam::351495784017:role/presenca-site-dev-github-deploy' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC - Dev us-east-1)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.DEV_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Stage clean static bundle
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/site-dist
+          mkdir -p /tmp/site-dist
+          cp index.html duvidas.html politica-de-privacidade.html termos-de-uso.html /tmp/site-dist/
+          cp robots.txt sitemap.xml llms.txt llms-full.txt /tmp/site-dist/
+          cp -R assets /tmp/site-dist/assets
+          cp -R .well-known /tmp/site-dist/.well-known
+
+      - name: Sync static bundle to S3 (Dev us-east-1)
+        run: |
+          set -euo pipefail
+          aws s3 sync /tmp/site-dist "s3://${DEV_SITE_BUCKET}" \
+            --delete \
+            --cache-control "public, max-age=86400" \
+            --exclude "*.html" \
+            --exclude "*.txt" \
+            --exclude "*.xml" \
+            --exclude ".well-known/*" \
+            --region us-east-1
+
+          aws s3 sync /tmp/site-dist "s3://${DEV_SITE_BUCKET}" \
+            --exclude "*" \
+            --include "*.html" \
+            --include "*.txt" \
+            --include "*.xml" \
+            --include ".well-known/*" \
+            --cache-control "public, max-age=0, must-revalidate" \
+            --region us-east-1
+
+      - name: Sync S3 bucket onto Dev EC2 (/opt/presenca/site) via SSM
+        run: |
+          set -euo pipefail
+          cat <<EOF > /tmp/ssm-site-sync.json
+          {
+            "commands": [
+              "set -euxo pipefail",
+              "mkdir -p /opt/presenca/site",
+              "aws s3 sync s3://${DEV_SITE_BUCKET} /opt/presenca/site --delete --region us-east-1",
+              "chmod -R a+rX /opt/presenca/site"
+            ]
+          }
+          EOF
+
+          CMD_ID=$(aws ssm send-command \
+            --instance-ids "${DEV_INSTANCE_ID}" \
+            --document-name "AWS-RunShellScript" \
+            --comment "Sync presenca-site commit ${{ github.sha }} (develop)" \
+            --timeout-seconds 300 \
+            --parameters file:///tmp/ssm-site-sync.json \
+            --query "Command.CommandId" \
+            --output text)
+
+          echo "==> SSM CommandId: ${CMD_ID}"
+          for attempt in $(seq 1 40); do
+            STATUS=$(aws ssm get-command-invocation \
+              --command-id "${CMD_ID}" \
+              --instance-id "${DEV_INSTANCE_ID}" \
+              --query "Status" \
+              --output text 2>/dev/null || echo "Pending")
+            echo "[Attempt ${attempt}/40] Status: ${STATUS}"
+            case "${STATUS}" in
+              Success)
+                aws ssm get-command-invocation --command-id "${CMD_ID}" --instance-id "${DEV_INSTANCE_ID}" --query "StandardOutputContent" --output text
+                break
+                ;;
+              Failed|Cancelled|TimedOut)
+                aws ssm get-command-invocation --command-id "${CMD_ID}" --instance-id "${DEV_INSTANCE_ID}" --query "StandardErrorContent" --output text >&2
+                exit 1
+                ;;
+            esac
+            if [[ "${attempt}" -eq 40 ]]; then
+              echo "==> Timeout waiting for SSM site sync on ${DEV_INSTANCE_ID}" >&2
+              exit 1
+            fi
+            sleep 5
+          done
+
+      - name: Smoke Test Dev Landing Page (https://dev.presenca.borysta.com/)
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 5 --retry-delay 3 "https://dev.presenca.borysta.com/" | grep -q "dev.presenca.borysta.com/app/#/login"
+          echo "✅ Dev Landing Page smoke test passed."
+
+  deploy-staging:
+    name: Deploy Staging (AWS S3 sa-east-1 + CloudFront — homol)
+    needs: validate
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/homol'
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      AWS_REGION: sa-east-1
+      STAGING_SITE_BUCKET: ${{ vars.STAGING_SITE_BUCKET || 'presenca-site-staging-351495784017' }}
+      STAGING_CF_DIST_ID: ${{ vars.STAGING_CLOUDFRONT_DISTRIBUTION_ID || 'E1GAPGNQ6UKBMG' }}
+      STAGING_DEPLOY_ROLE_ARN: ${{ vars.AWS_STAGING_DEPLOY_ROLE_ARN || 'arn:aws:iam::351495784017:role/presenca-site-staging-github-deploy' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC - Staging sa-east-1)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.STAGING_DEPLOY_ROLE_ARN }}
+          aws-region: sa-east-1
+
+      - name: Stage clean static bundle
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/site-dist
+          mkdir -p /tmp/site-dist
+          cp index.html duvidas.html politica-de-privacidade.html termos-de-uso.html /tmp/site-dist/
+          cp robots.txt sitemap.xml llms.txt llms-full.txt /tmp/site-dist/
+          cp -R assets /tmp/site-dist/assets
+          cp -R .well-known /tmp/site-dist/.well-known
+
+      - name: Sync static bundle to S3 (Staging sa-east-1)
+        run: |
+          set -euo pipefail
+          aws s3 sync /tmp/site-dist "s3://${STAGING_SITE_BUCKET}" \
+            --delete \
+            --cache-control "public, max-age=86400" \
+            --exclude "*.html" \
+            --exclude "*.txt" \
+            --exclude "*.xml" \
+            --exclude ".well-known/*" \
+            --region sa-east-1
+
+          aws s3 sync /tmp/site-dist "s3://${STAGING_SITE_BUCKET}" \
+            --exclude "*" \
+            --include "*.html" \
+            --include "*.txt" \
+            --include "*.xml" \
+            --include ".well-known/*" \
+            --cache-control "public, max-age=0, must-revalidate" \
+            --region sa-east-1
+
+      - name: Invalidate CloudFront Cache (Staging)
+        run: |
+          set -euo pipefail
+          INV_ID=$(aws cloudfront create-invalidation \
+            --distribution-id "${STAGING_CF_DIST_ID}" \
+            --paths "/*" \
+            --query "Invalidation.Id" \
+            --output text)
+          echo "==> Waiting for CloudFront invalidation ${INV_ID} on ${STAGING_CF_DIST_ID}..."
+          aws cloudfront wait invalidation-completed \
+            --distribution-id "${STAGING_CF_DIST_ID}" \
+            --id "${INV_ID}"
+
+      - name: Smoke Test Staging Landing Page (https://staging.presenca.borysta.com/)
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 5 --retry-delay 5 "https://staging.presenca.borysta.com/" | grep -q "staging.presenca.borysta.com/app/#/login"
+          echo "✅ Staging Landing Page smoke test passed."
+
+  deploy-production:
+    name: Deploy Production (AWS S3 sa-east-1 + CloudFront — main)
+    needs: validate
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      AWS_REGION: sa-east-1
+      PROD_ROLE_ARN: ${{ secrets.AWS_PROD_DEPLOY_ROLE_ARN }}
+      PROD_SITE_BUCKET: ${{ vars.PROD_SITE_BUCKET || 'presenca-site-prod-351495784017' }}
+      PROD_CF_DIST_ID: ${{ secrets.PROD_CLOUDFRONT_DISTRIBUTION_ID }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check if Production AWS Runtime is Active
+        id: check_runtime
+        run: |
+          if [[ -z "${PROD_ROLE_ARN}" ]]; then
+            echo "active=false" >> "$GITHUB_OUTPUT"
+            echo "==> Produção em Modo Dormente Zero-Custo (AWS_PROD_DEPLOY_ROLE_ARN não configurado)."
+          else
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure AWS credentials (OIDC - Production sa-east-1)
+        if: steps.check_runtime.outputs.active == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_PROD_DEPLOY_ROLE_ARN }}
+          aws-region: sa-east-1
+
+      - name: Stage & Sync static bundle to S3 (Production sa-east-1)
+        if: steps.check_runtime.outputs.active == 'true'
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/site-dist
+          mkdir -p /tmp/site-dist
+          cp index.html duvidas.html politica-de-privacidade.html termos-de-uso.html /tmp/site-dist/
+          cp robots.txt sitemap.xml llms.txt llms-full.txt /tmp/site-dist/
+          cp -R assets /tmp/site-dist/assets
+          cp -R .well-known /tmp/site-dist/.well-known
+
+          aws s3 sync /tmp/site-dist "s3://${PROD_SITE_BUCKET}" \
+            --delete \
+            --cache-control "public, max-age=86400" \
+            --exclude "*.html" \
+            --exclude "*.txt" \
+            --exclude "*.xml" \
+            --exclude ".well-known/*" \
+            --region sa-east-1
+
+          aws s3 sync /tmp/site-dist "s3://${PROD_SITE_BUCKET}" \
+            --exclude "*" \
+            --include "*.html" \
+            --include "*.txt" \
+            --include "*.xml" \
+            --include ".well-known/*" \
+            --cache-control "public, max-age=0, must-revalidate" \
+            --region sa-east-1
+
+          if [[ -n "${PROD_CF_DIST_ID}" ]]; then
+            INV_ID=$(aws cloudfront create-invalidation \
+              --distribution-id "${PROD_CF_DIST_ID}" \
+              --paths "/*" \
+              --query "Invalidation.Id" \
+              --output text)
+            aws cloudfront wait invalidation-completed \
+              --distribution-id "${PROD_CF_DIST_ID}" \
+              --id "${INV_ID}"
+          fi
+
+          curl -fsSL --retry 5 --retry-delay 5 "https://presenca.borysta.com/" | grep -q "presenca.borysta.com/app/#/login"
