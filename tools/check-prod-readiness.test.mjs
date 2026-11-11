@@ -64,5 +64,10 @@ test('validates JSON-LD in index.html and referral sanitizer in assets/site.js',
   const siteJs = readFileSync(join(repoRoot, 'assets/site.js'), 'utf8');
   assert.ok(siteJs.includes('presenca.referral.v1'));
   assert.ok(!siteJs.includes('document.cookie'), 'site.js must never set or read cookies');
+
+  assert.ok(indexHtml.includes('<h3>Quem precisa voltar, volta.</h3>'), 'Recall tab title must match Anna report');
+  assert.ok(indexHtml.includes('src="assets/img/app/recall.webp" width="1600" height="1000"'), 'Recall screenshot must declare 1600x1000');
+  const siteCss = readFileSync(join(repoRoot, 'assets/site.css'), 'utf8');
+  assert.match(siteCss, /\.figs__note\s*\{[^}]*font-size:\s*14px;/, '.figs__note must respect 14px minimum font-size');
 });
 
