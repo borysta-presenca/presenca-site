@@ -9,7 +9,7 @@
   },
   "api": {
     "type": "openapi",
-    "url": "https://dev.presenca.borysta.com/api/public/openapi.json",
+    "url": "https://staging.presenca.borysta.com/api/public/openapi.json",
     "is_user_authenticated": false
   },
   "logo_url": "https://presenca.borysta.com/assets/logo/favicon.svg",

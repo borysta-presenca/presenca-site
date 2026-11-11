@@ -1,0 +1,23 @@
+title = "Presenca Site Gitleaks Configuration"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "asaas-api-key"
+description = "Asaas Production or Sandbox API Key ($aact_...)"
+regex = '''\$aact_(prod|ytxz|hmlg)_[A-Za-z0-9=_-]{20,}'''
+tags = ["key", "asaas", "billing"]
+
+[[rules]]
+id = "meta-graph-access-token"
+description = "Meta / WhatsApp Cloud API Access Token (EAA...)"
+regex = '''\bEAA[A-Za-z0-9]{32,}\b'''
+tags = ["token", "meta", "whatsapp"]
+
+[allowlist]
+description = "Allowlist gitignored local files and Terraform state artifacts"
+paths = [
+  '''(^|/)\.env(\..+)?$''',
+  '''\.tfstate(\.backup)?$'''
+]

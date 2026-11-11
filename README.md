@@ -10,6 +10,7 @@ The public website of Presença, the smart schedule with an AI assistant by Bory
 | `duvidas.html` | All questions (the five of the home page and eight more), with the header and footer of the home page |
 | `politica-de-privacidade.html`, `termos-de-uso.html` | Privacy policy and terms of use, linked in the footer of every page. Until the reviewed texts arrive they show the notice "Texto em revisão jurídica" and carry `noindex` |
 | `assets/site.css` | All styles. Colours and the one radius are tokens at the top, the parts follow in the order of the page, the widths (1180, 960, 720 px) come last |
+| `assets/init.js` | Pre-paint `.js` class toggle (strict CSP `script-src 'self'`) and automatic redirect of legacy root hash URLs (`/#/login`, `/#/convite/...`) to `/app/#/...` |
 | `assets/site.js` | The living parts: mobile menu, the menu mark for the section in view, the hero film with its pause button, the pictures that open once, the switch between without and with, the counter, tabs, the agenda before and after, the sign-up card and the login window. The page reads and works without it |
 | `assets/fonts/` | Figtree 400 to 800 as woff2, self-hosted (no Google Fonts, no visitor data leaves the site) |
 | `assets/img/` | Photographs from the Presença and Borysta pools (Pexels licence), cut and graded by `tools/photos.py` |
@@ -17,6 +18,7 @@ The public website of Presença, the smart schedule with an AI assistant by Bory
 | `assets/img/app/` | Screens of the click dummy (`Borysta_App_Presenca-Demo_PT-EN.html`, state of 07.10.2026) with its demo clinic and fictitious data, 1600 × 1000 px as WebP, and `meu-dia.webp`, the role Dentista on a phone (780 × 1688 px) |
 | `assets/logo/` | Presença mark (navy and white), Borysta wordmark, favicon |
 | `tools/serve.mjs` | Local preview: `node tools/serve.mjs 8766` then open http://127.0.0.1:8766 |
+| `tools/check-prod-readiness.mjs` | LGPD & production readiness gate (`node tools/check-prod-readiness.mjs`): verifies official corporate data, plans and DPO contact on every branch, and blocks merges to `main` while `LGPD-01` legal placeholders or non-production app URLs remain |
 | `tools/photos.py` | Rebuilds `assets/img/` from the picture pools in the Borysta work folder; `python3 tools/photos.py sobre.jpg` rebuilds a single picture, `medica` the hero portrait |
 | `tools/cutout.swift` | Frees the hero portrait from its background with Apple's Vision framework (macOS 14 or later); `photos.py` compiles and calls it |
 | `tools/encode.swift` | Makes the two film sizes with Apple's AVFoundation: `swiftc -O tools/encode.swift -o /tmp/encode`, then `/tmp/encode <in.mp4> assets/video/hero-1080.mp4 1920 1080 3000000` and `... hero-540.mp4 960 540 900000` |
@@ -25,13 +27,19 @@ The public website of Presença, the smart schedule with an AI assistant by Bory
 
 ## The links into the app
 
-"Entrar" and "Criar conta" lead to the app's own screens (`/#/login` and `/#/cadastro`). The app address appears 16 times in `index.html` and 6 times in `duvidas.html` (links, the `action` of the sign-up card and of the login window); search for `dev.presenca.borysta.com` and replace every one with the production address on launch day. Until a production environment exists, the links lead to the development environment, which asks for its shared password.
+"Entrar" and "Criar conta" lead to the app's own screens mounted under `/app/` (`/app/#/login` and `/app/#/cadastro`), allowing the Landing Page to answer at `/` on the same domain without colliding with SPA hash routes. The app address appears in `index.html`, `duvidas.html`, `llms.txt`, `llms-full.txt` and `.well-known/ai-plugin.json`:
+- `develop` points to `https://dev.presenca.borysta.com/app/...`
+- `homol` points to `https://staging.presenca.borysta.com/app/...`
+- `main` points to `https://presenca.borysta.com/app/...` (`tools/check-prod-readiness.mjs` enforces environment isolation automatically across `develop`, `homol`, and `main`).
 
 The login window on this page shows the app's login screen. It is a picture of the real thing, not a sign-in: its fields carry no `name`, nothing typed there is sent or stored, and its button only opens the app's own login page, where the visitor signs in. The same holds for the e-mail field of the sign-up card in the hero: nothing typed there leaves the page, the button only opens the app's own sign-up page. The real sign-in and sign-up stay in the app.
 
-## Deploying
+## Deploying (Terraform + S3 + GitHub Actions OIDC)
 
-The site is not published from GitHub. Download the `main` branch (Code, Download ZIP) and copy everything except `tools/`, `.claude/`, `README.md` and `CNAME` into the web root of the server; there is nothing to compile. The server must answer range requests (HTTP 206) for the films, otherwise Safari does not play them. `canonical`, `robots.txt` and `sitemap.xml` name `https://presenca.borysta.com/`; change them if the site runs under another address. `CNAME` is only read by GitHub Pages.
+Infrastructure is managed via Terraform in `infra/terraform/` (`environments/dev` in `us-east-1`, `environments/staging` and dormant `environments/prod` in `sa-east-1`), mirroring the `presenca` monorepo:
+- **Dev (`develop` → `https://dev.presenca.borysta.com`):** `.github/workflows/ci.yml` (`deploy-dev`) syncs static assets via OIDC to private bucket `presenca-site-dev-351495784017` and refreshes `/opt/presenca/site` on the Dev EC2 Caddy proxy via AWS SSM. The Landing Page at `/` is public (no Basic Auth); `/app/*` prompts Basic Auth.
+- **Homologação / Staging (`homol` → `https://staging.presenca.borysta.com`):** `.github/workflows/ci.yml` (`deploy-staging`) syncs static assets via OIDC to private bucket `presenca-site-staging-351495784017` (served directly by CloudFront `E1GAPGNQ6UKBMG` via Origin Access Control with HTTP 206 Range support for Safari hero MP4 videos) and invalidates CloudFront cache. The Landing Page at `/` is public; `/app/*` prompts Basic Auth.
+- **Production (`main` → `https://presenca.borysta.com`):** Prepared in dormant mode (`deploy-production`) until production activation.
 
 ## Rules the page follows
 
