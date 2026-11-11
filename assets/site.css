@@ -158,7 +158,7 @@ h2.center { max-width: 22ch; margin-inline: auto; }
 .toggle button[aria-pressed="true"] { background: var(--navy); color: #fff; }
 .shot { padding: 20px; background: var(--grey); }
 .shot img { width: 100%; }
-.figs__note { margin-top: 22px; font-size: 13px; line-height: 1.5; color: var(--muted); }.voz { display: grid; grid-template-columns: 1.3fr .7fr; gap: 48px; align-items: center; margin-top: 24px; padding: 40px 48px; background: var(--navy); }
+.figs__note { margin-top: 22px; font-size: 14px; line-height: 1.5; color: var(--muted); }.voz { display: grid; grid-template-columns: 1.3fr .7fr; gap: 48px; align-items: center; margin-top: 24px; padding: 40px 48px; background: var(--navy); }
 .voz__msg { display: grid; gap: 10px; margin: 0; }
 .b { max-width: 34em; padding: 14px 18px; border-radius: var(--r); font-size: 17px; line-height: 1.5; }
 .b--in { background: #fff; color: var(--navy); }

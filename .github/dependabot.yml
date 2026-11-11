@@ -1,0 +1,35 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "terraform"
+    directory: "/infra/terraform/environments/dev"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "hashicorp/aws"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "terraform"
+    directory: "/infra/terraform/environments/staging"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "hashicorp/aws"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: "terraform"
+    directory: "/infra/terraform/environments/prod"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "hashicorp/aws"
+        update-types: ["version-update:semver-major"]
