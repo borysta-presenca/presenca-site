@@ -15,6 +15,12 @@ variable "github_repository" {
   default     = "borysta-presenca/presenca-site"
 }
 
+variable "github_immutable_sub_prefix" {
+  description = "GitHub immutable OIDC subject prefix (owner@orgId/repo@repoId)"
+  type        = string
+  default     = "repo:borysta-presenca@333961937/presenca-site@1430269123"
+}
+
 variable "allowed_git_branch" {
   description = "Exact Git branch allowed to assume this deploy role (develop, homol, main)"
   type        = string
@@ -70,6 +76,9 @@ data "aws_iam_policy_document" "github_trust" {
         "repo:${var.github_repository}:ref:refs/heads/${var.allowed_git_branch}",
         "repo:${var.github_repository}:environment:${var.environment == "prod" ? "production" : var.environment}",
         "repo:${var.github_repository}:environment:${var.environment}",
+        "${var.github_immutable_sub_prefix}:ref:refs/heads/${var.allowed_git_branch}",
+        "${var.github_immutable_sub_prefix}:environment:${var.environment == "prod" ? "production" : var.environment}",
+        "${var.github_immutable_sub_prefix}:environment:${var.environment}",
       ])
     }
   }

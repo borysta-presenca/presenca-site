@@ -160,7 +160,8 @@ jobs:
       - name: Smoke Test Dev Landing Page (https://dev.presenca.borysta.com/)
         run: |
           set -euo pipefail
-          curl -fsSL --retry 5 --retry-delay 3 "https://dev.presenca.borysta.com/" | grep -q "dev.presenca.borysta.com/app/#/login"
+          curl -fsSL --retry 5 --retry-delay 3 -o /tmp/smoke-dev.html "https://dev.presenca.borysta.com/"
+          grep -q "dev.presenca.borysta.com/app/#/login" /tmp/smoke-dev.html
           echo "✅ Dev Landing Page smoke test passed."
 
   deploy-staging:
@@ -234,7 +235,8 @@ jobs:
       - name: Smoke Test Staging Landing Page (https://staging.presenca.borysta.com/)
         run: |
           set -euo pipefail
-          curl -fsSL --retry 5 --retry-delay 5 "https://staging.presenca.borysta.com/" | grep -q "staging.presenca.borysta.com/app/#/login"
+          curl -fsSL --retry 5 --retry-delay 5 -o /tmp/smoke-staging.html "https://staging.presenca.borysta.com/"
+          grep -q "staging.presenca.borysta.com/app/#/login" /tmp/smoke-staging.html
           echo "✅ Staging Landing Page smoke test passed."
 
   deploy-production:
@@ -312,4 +314,5 @@ jobs:
               --id "${INV_ID}"
           fi
 
-          curl -fsSL --retry 5 --retry-delay 5 "https://presenca.borysta.com/" | grep -q "presenca.borysta.com/app/#/login"
+          curl -fsSL --retry 5 --retry-delay 5 -o /tmp/smoke-prod.html "https://presenca.borysta.com/"
+          grep -q "presenca.borysta.com/app/#/login" /tmp/smoke-prod.html
