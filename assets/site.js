@@ -1,7 +1,7 @@
 // presenca.borysta.com, round 3. The page reads and works without this file; the script adds the mobile menu,
 // the mark on the menu for the section in view, the hero film, the pictures that open once, the switch between without and with,
-// the counter, the tabs, the agenda before and after and the login window. Nothing here talks to a server: the sign-up card and the
-// login window only lead to the app, and nothing typed on this page is sent anywhere.
+// the counter, the tabs, and the agenda before and after. Nothing here talks to a server: the sign-up card and the
+// login links lead directly to the app (/app/#/login and /app/#/cadastro), and nothing typed on this page is sent anywhere.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -129,23 +129,6 @@
       $$('button', toggle).forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
       shots.forEach((img, i) => { img.hidden = String(i) !== b.dataset.show; });
     }));
-  }
-
-  // --- the login window: the look of the app's own login; entering always continues in the app ---
-  const dialog = $('[data-dialog]');
-  if (dialog && typeof dialog.showModal === 'function') {
-    const mail = $('#l-mail', dialog);
-    const open = (email) => {
-      dialog.showModal();
-      if (email) mail.value = email;
-      // a phone keeps its keyboard closed until the visitor taps a field
-      if (matchMedia('(pointer: fine)').matches) (email ? $('#l-pass', dialog) : mail).focus();
-    };
-    $$('[data-login]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); open(); }));
-    $('[data-close]', dialog).addEventListener('click', () => dialog.close());
-    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
-    // nothing typed here is sent anywhere: the app asks for it again on its own, secure page
-    $('[data-login-go]', dialog).addEventListener('submit', (e) => { e.preventDefault(); location.href = e.target.action; });
   }
 
   // --- the sign-up card: the e-mail stays on this page, the visitor continues on the app's own sign-up page ---
