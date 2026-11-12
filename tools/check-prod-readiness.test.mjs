@@ -79,7 +79,8 @@ test('blocks stale CNPJ, stale plan prices, inline executable scripts, or root /
     writeFileSync(join(tmp, 'llms.txt'), 'CNPJ 56.842.193/0001-85 R$ 299/mês', 'utf8');
     const htmlWithInline = readFileSync(join(tmp, 'index.html'), 'utf8')
       .replace('<script src="assets/init.js"></script>', '<script>alert(1)</script>')
-      .replace('https://dev.presenca.borysta.com/app/#/login', 'https://dev.presenca.borysta.com/#/login');
+      .replace('https://dev.presenca.borysta.com/app/#/login', 'https://dev.presenca.borysta.com/#/login')
+      .replace('</body>', '<dialog class="login" data-dialog></dialog></body>');
     writeFileSync(join(tmp, 'index.html'), htmlWithInline, 'utf8');
 
     const res = evaluateSiteReadiness({ rootDir: tmp, baseRef: 'develop', refName: 'feature/broken' });
@@ -88,6 +89,7 @@ test('blocks stale CNPJ, stale plan prices, inline executable scripts, or root /
     assert.ok(res.errors.some((e) => e.includes('R$ 299')));
     assert.ok(res.errors.some((e) => e.includes('[CSP] index.html')));
     assert.ok(res.errors.some((e) => e.includes('[SPA-PATH] index.html')));
+    assert.ok(res.errors.some((e) => e.includes('[LOGIN-SINGLE] index.html')));
   } finally {
     rmSync(tmp, { recursive: true, force: true });
   }
