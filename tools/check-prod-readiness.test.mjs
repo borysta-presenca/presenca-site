@@ -8,7 +8,7 @@ import { evaluateSiteReadiness } from './check-prod-readiness.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-function copyFixtureSite(tmp) {
+function copyFixtureSite(tmp, targetHost = 'dev.presenca.borysta.com') {
   mkdirSync(join(tmp, '.well-known'), { recursive: true });
   for (const f of [
     'index.html',
@@ -20,31 +20,37 @@ function copyFixtureSite(tmp) {
     'termos-de-uso.html',
     'sitemap.xml',
   ]) {
-    cpSync(join(repoRoot, f), join(tmp, f));
+    const raw = readFileSync(join(repoRoot, f), 'utf8')
+      .replaceAll('staging.presenca.borysta.com', targetHost)
+      .replaceAll('dev.presenca.borysta.com', targetHost);
+    writeFileSync(join(tmp, f), raw, 'utf8');
   }
 }
 
 test('passes on develop with tracked LGPD-01 warnings when corporate data, CSP, and /app/ paths are valid', () => {
-  const res = evaluateSiteReadiness({ rootDir: repoRoot, baseRef: 'develop', refName: 'feature/test', enforceProd: false });
-  assert.equal(res.ok, true, `Expected develop gate to pass, got errors: ${res.errors.join('; ')}`);
-  assert.equal(res.isMainTarget, false);
-  assert.ok(res.warnings.some((w) => w.includes('[LGPD-01] politica-de-privacidade.html')));
-  assert.ok(res.warnings.some((w) => w.includes('[LGPD-01] termos-de-uso.html')));
+  const tmp = mkdtempSync(join(tmpdir(), 'presenca-site-dev-'));
+  try {
+    copyFixtureSite(tmp, 'dev.presenca.borysta.com');
+    const res = evaluateSiteReadiness({ rootDir: tmp, baseRef: 'develop', refName: 'feature/test', enforceProd: false });
+    assert.equal(res.ok, true, `Expected develop gate to pass, got errors: ${res.errors.join('; ')}`);
+    assert.equal(res.isMainTarget, false);
+    assert.ok(res.warnings.some((w) => w.includes('[LGPD-01] politica-de-privacidade.html')));
+    assert.ok(res.warnings.some((w) => w.includes('[LGPD-01] termos-de-uso.html')));
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
 });
 
 test('blocks merge to homol if any dev.presenca.borysta.com URL remains and passes once updated to staging', () => {
-  const blocked = evaluateSiteReadiness({ rootDir: repoRoot, baseRef: 'homol', refName: 'develop', enforceProd: false });
-  assert.equal(blocked.ok, false);
-  assert.equal(blocked.isHomolTarget, true);
-  assert.ok(blocked.errors.some((e) => e.includes('[ENV-URL] index.html')));
-
   const tmp = mkdtempSync(join(tmpdir(), 'presenca-site-homol-'));
   try {
-    copyFixtureSite(tmp);
-    for (const f of ['index.html', 'duvidas.html', 'llms-full.txt', '.well-known/ai-plugin.json']) {
-      const cur = readFileSync(join(tmp, f), 'utf8');
-      writeFileSync(join(tmp, f), cur.replaceAll('dev.presenca.borysta.com', 'staging.presenca.borysta.com'), 'utf8');
-    }
+    copyFixtureSite(tmp, 'dev.presenca.borysta.com');
+    const blocked = evaluateSiteReadiness({ rootDir: tmp, baseRef: 'homol', refName: 'develop', enforceProd: false });
+    assert.equal(blocked.ok, false);
+    assert.equal(blocked.isHomolTarget, true);
+    assert.ok(blocked.errors.some((e) => e.includes('[ENV-URL] index.html')));
+
+    copyFixtureSite(tmp, 'staging.presenca.borysta.com');
     const cleanHomol = evaluateSiteReadiness({ rootDir: tmp, baseRef: 'homol', refName: 'homol' });
     assert.equal(cleanHomol.ok, true, `Expected clean homol to pass, got: ${cleanHomol.errors.join('; ')}`);
   } finally {
@@ -68,7 +74,8 @@ test('blocks stale CNPJ, stale plan prices, inline executable scripts, or root /
     writeFileSync(join(tmp, 'llms.txt'), 'CNPJ 56.842.193/0001-85 R$ 299/mês', 'utf8');
     const htmlWithInline = readFileSync(join(tmp, 'index.html'), 'utf8')
       .replace('<script src="assets/init.js"></script>', '<script>alert(1)</script>')
-      .replace('https://dev.presenca.borysta.com/app/#/login', 'https://dev.presenca.borysta.com/#/login');
+      .replace('https://dev.presenca.borysta.com/app/#/login', 'https://dev.presenca.borysta.com/#/login')
+      .replace('</body>', '<dialog class="login" data-dialog></dialog></body>');
     writeFileSync(join(tmp, 'index.html'), htmlWithInline, 'utf8');
 
     const res = evaluateSiteReadiness({ rootDir: tmp, baseRef: 'develop', refName: 'feature/broken' });
@@ -77,6 +84,7 @@ test('blocks stale CNPJ, stale plan prices, inline executable scripts, or root /
     assert.ok(res.errors.some((e) => e.includes('R$ 299')));
     assert.ok(res.errors.some((e) => e.includes('[CSP] index.html')));
     assert.ok(res.errors.some((e) => e.includes('[SPA-PATH] index.html')));
+    assert.ok(res.errors.some((e) => e.includes('[LOGIN-SINGLE] index.html')));
   } finally {
     rmSync(tmp, { recursive: true, force: true });
   }

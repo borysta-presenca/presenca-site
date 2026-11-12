@@ -6,12 +6,12 @@ The public website of Presença, the smart schedule with an AI assistant by Bory
 
 | Path | What it is |
 | --- | --- |
-| `index.html` | The page (round 3, 25.10.2026, changed in round 4 on 26.10.2026), built on the structure of a large Brazilian fintech landing page in Presença's colours: white header, navy hero with the sign-up card and the office film up to the right edge, without and with Presença as a switch over three drawn situations, the clinic in a notebook and a phone with six features in fine frames and the payment methods, the platform inside (seven tabs with real screens of the demo clinic) and one example message, who it is for, the demo figures with the counter, the segments as wordmarks, the professional's day on the phone, five questions with the button to all questions, the footer with the contact block and the legal pages, and the login window |
+| `index.html` | The page (round 3, 25.10.2026, changed in round 4 on 26.10.2026), built on the structure of a large Brazilian fintech landing page in Presença's colours: white header, navy hero with the sign-up card and the office film up to the right edge, without and with Presença as a switch over three drawn situations, the clinic in a notebook and a phone with six features in fine frames and the payment methods, the platform inside (seven tabs with real screens of the demo clinic) and one example message, who it is for, the demo figures with the counter, the segments as wordmarks, the professional's day on the phone, five questions with the button to all questions, and the footer with the contact block and the legal pages |
 | `duvidas.html` | All questions (the five of the home page and eight more), with the header and footer of the home page |
 | `politica-de-privacidade.html`, `termos-de-uso.html` | Privacy policy and terms of use, linked in the footer of every page. Until the reviewed texts arrive they show the notice "Texto em revisão jurídica" and carry `noindex` |
 | `assets/site.css` | All styles. Colours and the one radius are tokens at the top, the parts follow in the order of the page, the widths (1180, 960, 720 px) come last |
 | `assets/init.js` | Pre-paint `.js` class toggle (strict CSP `script-src 'self'`) and automatic redirect of legacy root hash URLs (`/#/login`, `/#/convite/...`) to `/app/#/...` |
-| `assets/site.js` | The living parts: mobile menu, the menu mark for the section in view, the hero film with its pause button, the pictures that open once, the switch between without and with, the counter, tabs, the agenda before and after, the sign-up card and the login window. The page reads and works without it |
+| `assets/site.js` | The living parts: mobile menu, the menu mark for the section in view, the hero film with its pause button, the pictures that open once, the switch between without and with, the counter, tabs, the agenda before and after, and the sign-up card. The page reads and works without it |
 | `assets/fonts/` | Figtree 400 to 800 as woff2, self-hosted (no Google Fonts, no visitor data leaves the site) |
 | `assets/img/` | Photographs from the Presença and Borysta pools (Pexels licence), cut and graded by `tools/photos.py` |
 | `assets/video/` | The hero film (Pexels 32952038, the same eight-second cut as on the Borysta site) without sound: 1920 × 1080 for wide windows, 960 × 540 for phones and tablets, and its first frame as the still |
@@ -32,7 +32,7 @@ The public website of Presença, the smart schedule with an AI assistant by Bory
 - `homol` points to `https://staging.presenca.borysta.com/app/...`
 - `main` points to `https://presenca.borysta.com/app/...` (`tools/check-prod-readiness.mjs` enforces environment isolation automatically across `develop`, `homol`, and `main`).
 
-The login window on this page shows the app's login screen. It is a picture of the real thing, not a sign-in: its fields carry no `name`, nothing typed there is sent or stored, and its button only opens the app's own login page, where the visitor signs in. The same holds for the e-mail field of the sign-up card in the hero: nothing typed there leaves the page, the button only opens the app's own sign-up page. The real sign-in and sign-up stay in the app.
+All "Entrar" buttons lead straight to the application's single login screen (`/app/#/login`), and the sign-up card in the hero opens the application's sign-up screen (`/app/#/cadastro`). The real sign-in and sign-up stay exclusively in the app.
 
 ## Deploying (Terraform + S3 + GitHub Actions OIDC)
 
