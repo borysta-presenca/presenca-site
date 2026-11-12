@@ -147,6 +147,15 @@ export function evaluateSiteReadiness({
     }
   }
 
+  for (const [name, html] of [
+    ['index.html', indexHtml],
+    ['duvidas.html', duvidasHtml],
+  ]) {
+    if (/data-dialog|data-login\b|<dialog\b[^>]*class\s*=\s*["'][^"']*login/i.test(html)) {
+      errors.push(`[LOGIN-SINGLE] ${name} still contains a duplicate Landing Page login modal/trigger; all "Entrar" links must navigate directly to /app/#/login.`);
+    }
+  }
+
   // 3. LGPD-01: Legal pages placeholder & noindex check (warning on develop/homol, hard block on main)
   for (const [name, html] of [
     ['politica-de-privacidade.html', privacyHtml],
