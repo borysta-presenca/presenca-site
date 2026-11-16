@@ -20,10 +20,14 @@ function copyFixtureSite(tmp, targetHost = 'dev.presenca.borysta.com') {
     'termos-de-uso.html',
     'sitemap.xml',
   ]) {
-    const raw = readFileSync(join(repoRoot, f), 'utf8')
-      .replaceAll('staging.presenca.borysta.com', targetHost)
-      .replaceAll('dev.presenca.borysta.com', targetHost);
-    writeFileSync(join(tmp, f), raw, 'utf8');
+    let content = readFileSync(join(repoRoot, f), 'utf8');
+    if (['index.html', 'duvidas.html', 'llms-full.txt', '.well-known/ai-plugin.json'].includes(f)) {
+      content = content.replace(
+        /https:\/\/(?:dev\.|staging\.)?presenca\.borysta\.com(?=\/(?:app|api\/public\/openapi\.json))/g,
+        `https://${targetHost}`,
+      );
+    }
+    writeFileSync(join(tmp, f), content, 'utf8');
   }
 }
 
@@ -42,28 +46,36 @@ test('passes on develop with V2.0 legal pages published (no LGPD-01 warnings) wh
 });
 
 test('blocks merge to homol if any dev.presenca.borysta.com URL remains and passes once updated to staging', () => {
-  const tmp = mkdtempSync(join(tmpdir(), 'presenca-site-homol-'));
+  const tmpDev = mkdtempSync(join(tmpdir(), 'presenca-site-homol-blocked-'));
+  const tmpStaging = mkdtempSync(join(tmpdir(), 'presenca-site-homol-clean-'));
   try {
-    copyFixtureSite(tmp, 'dev.presenca.borysta.com');
-    const blocked = evaluateSiteReadiness({ rootDir: tmp, baseRef: 'homol', refName: 'develop', enforceProd: false });
+    copyFixtureSite(tmpDev, 'dev.presenca.borysta.com');
+    const blocked = evaluateSiteReadiness({ rootDir: tmpDev, baseRef: 'homol', refName: 'develop', enforceProd: false });
     assert.equal(blocked.ok, false);
     assert.equal(blocked.isHomolTarget, true);
     assert.ok(blocked.errors.some((e) => e.includes('[ENV-URL] index.html')));
 
-    copyFixtureSite(tmp, 'staging.presenca.borysta.com');
-    const cleanHomol = evaluateSiteReadiness({ rootDir: tmp, baseRef: 'homol', refName: 'homol' });
+    copyFixtureSite(tmpStaging, 'staging.presenca.borysta.com');
+    const cleanHomol = evaluateSiteReadiness({ rootDir: tmpStaging, baseRef: 'homol', refName: 'homol' });
     assert.equal(cleanHomol.ok, true, `Expected clean homol to pass, got: ${cleanHomol.errors.join('; ')}`);
   } finally {
-    rmSync(tmp, { recursive: true, force: true });
+    rmSync(tmpDev, { recursive: true, force: true });
+    rmSync(tmpStaging, { recursive: true, force: true });
   }
 });
 
 test('allows main target once URLs are prod (zero LGPD-01/02 errors), and hard-blocks placeholder/noindex or dev/staging URLs on main', () => {
-  const repoMainRes = evaluateSiteReadiness({ rootDir: repoRoot, baseRef: 'main', refName: 'homol', enforceProd: false });
-  assert.equal(repoMainRes.ok, false);
-  assert.equal(repoMainRes.isMainTarget, true);
-  assert.equal(repoMainRes.errors.filter((e) => e.includes('[LGPD-01]') || e.includes('[LGPD-02]')).length, 0);
-  assert.ok(repoMainRes.errors.some((e) => e.includes('[PROD-URL] index.html')));
+  const stagingTmp = mkdtempSync(join(tmpdir(), 'presenca-site-staging-blocked-'));
+  try {
+    copyFixtureSite(stagingTmp, 'staging.presenca.borysta.com');
+    const stagingMainRes = evaluateSiteReadiness({ rootDir: stagingTmp, baseRef: 'main', refName: 'homol', enforceProd: false });
+    assert.equal(stagingMainRes.ok, false);
+    assert.equal(stagingMainRes.isMainTarget, true);
+    assert.equal(stagingMainRes.errors.filter((e) => e.includes('[LGPD-01]') || e.includes('[LGPD-02]')).length, 0);
+    assert.ok(stagingMainRes.errors.some((e) => e.includes('[PROD-URL] index.html')));
+  } finally {
+    rmSync(stagingTmp, { recursive: true, force: true });
+  }
 
   const cleanProdTmp = mkdtempSync(join(tmpdir(), 'presenca-site-prod-clean-'));
   try {
