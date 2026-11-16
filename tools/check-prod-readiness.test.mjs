@@ -150,7 +150,15 @@ test('validates JSON-LD in index.html, CSP init.js hash bridge, and referral san
 
   const siteJs = readFileSync(join(repoRoot, 'assets/site.js'), 'utf8');
   assert.ok(siteJs.includes('presenca.referral.v1'));
+  assert.ok(siteJs.includes("searchParams.set('email', mail)"), 'site.js must forward optional email to assisted onboarding');
   assert.ok(!siteJs.includes('document.cookie'), 'site.js must never set or read cookies');
+
+  const duvidasHtml = readFileSync(join(repoRoot, 'duvidas.html'), 'utf8');
+  assert.ok(indexHtml.includes('Solicitar acesso'), 'index.html CTAs must display Solicitar acesso');
+  assert.ok(indexHtml.includes('Solicite o acesso da sua clínica'), 'index.html hero form must display assisted access title');
+  assert.ok(duvidasHtml.includes('Solicitar acesso'), 'duvidas.html CTAs must display Solicitar acesso');
+  assert.ok(!indexHtml.includes('>Criar conta<'), 'index.html must not keep self-service Criar conta CTA');
+  assert.ok(!duvidasHtml.includes('>Criar conta<'), 'duvidas.html must not keep self-service Criar conta CTA');
 
   assert.ok(indexHtml.includes('<h3>Quem precisa voltar, volta.</h3>'), 'Recall tab title must match Anna report');
   assert.ok(indexHtml.includes('src="assets/img/app/recall.webp" width="1600" height="1000"'), 'Recall screenshot must declare 1600x1000');
