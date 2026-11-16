@@ -22,9 +22,10 @@ function copyFixtureSite(tmp, targetHost = 'dev.presenca.borysta.com') {
   ]) {
     let content = readFileSync(join(repoRoot, f), 'utf8');
     if (['index.html', 'duvidas.html', 'llms-full.txt', '.well-known/ai-plugin.json'].includes(f)) {
-      content = content
-        .replaceAll('dev.presenca.borysta.com', targetHost)
-        .replaceAll('staging.presenca.borysta.com', targetHost);
+      content = content.replace(
+        /https:\/\/(?:dev\.|staging\.)?presenca\.borysta\.com(?=\/(?:app|api\/public\/openapi\.json))/g,
+        `https://${targetHost}`,
+      );
     }
     writeFileSync(join(tmp, f), content, 'utf8');
   }
@@ -64,11 +65,17 @@ test('blocks merge to homol if any dev.presenca.borysta.com URL remains and pass
 });
 
 test('allows main target once URLs are prod (zero LGPD-01/02 errors), and hard-blocks placeholder/noindex or dev/staging URLs on main', () => {
-  const repoMainRes = evaluateSiteReadiness({ rootDir: repoRoot, baseRef: 'main', refName: 'homol', enforceProd: false });
-  assert.equal(repoMainRes.ok, false);
-  assert.equal(repoMainRes.isMainTarget, true);
-  assert.equal(repoMainRes.errors.filter((e) => e.includes('[LGPD-01]') || e.includes('[LGPD-02]')).length, 0);
-  assert.ok(repoMainRes.errors.some((e) => e.includes('[PROD-URL] index.html')));
+  const stagingTmp = mkdtempSync(join(tmpdir(), 'presenca-site-staging-blocked-'));
+  try {
+    copyFixtureSite(stagingTmp, 'staging.presenca.borysta.com');
+    const stagingMainRes = evaluateSiteReadiness({ rootDir: stagingTmp, baseRef: 'main', refName: 'homol', enforceProd: false });
+    assert.equal(stagingMainRes.ok, false);
+    assert.equal(stagingMainRes.isMainTarget, true);
+    assert.equal(stagingMainRes.errors.filter((e) => e.includes('[LGPD-01]') || e.includes('[LGPD-02]')).length, 0);
+    assert.ok(stagingMainRes.errors.some((e) => e.includes('[PROD-URL] index.html')));
+  } finally {
+    rmSync(stagingTmp, { recursive: true, force: true });
+  }
 
   const cleanProdTmp = mkdtempSync(join(tmpdir(), 'presenca-site-prod-clean-'));
   try {
@@ -143,7 +150,15 @@ test('validates JSON-LD in index.html, CSP init.js hash bridge, and referral san
 
   const siteJs = readFileSync(join(repoRoot, 'assets/site.js'), 'utf8');
   assert.ok(siteJs.includes('presenca.referral.v1'));
+  assert.ok(siteJs.includes("searchParams.set('email', mail)"), 'site.js must forward optional email to assisted onboarding');
   assert.ok(!siteJs.includes('document.cookie'), 'site.js must never set or read cookies');
+
+  const duvidasHtml = readFileSync(join(repoRoot, 'duvidas.html'), 'utf8');
+  assert.ok(indexHtml.includes('Solicitar acesso'), 'index.html CTAs must display Solicitar acesso');
+  assert.ok(indexHtml.includes('Solicite o acesso da sua clínica'), 'index.html hero form must display assisted access title');
+  assert.ok(duvidasHtml.includes('Solicitar acesso'), 'duvidas.html CTAs must display Solicitar acesso');
+  assert.ok(!indexHtml.includes('>Criar conta<'), 'index.html must not keep self-service Criar conta CTA');
+  assert.ok(!duvidasHtml.includes('>Criar conta<'), 'duvidas.html must not keep self-service Criar conta CTA');
 
   assert.ok(indexHtml.includes('<h3>Quem precisa voltar, volta.</h3>'), 'Recall tab title must match Anna report');
   assert.ok(indexHtml.includes('src="assets/img/app/recall.webp" width="1600" height="1000"'), 'Recall screenshot must declare 1600x1000');
