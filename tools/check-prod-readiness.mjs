@@ -3,10 +3,10 @@
  * Production Readiness, Environment URL Hygiene, CSP & LGPD Gate for presenca-site (presenca.borysta.com)
  *
  * - Runs on every push/PR (`develop`, `homol`, `main`):
- *   1. Always blocks stale corporate data (`56.842.193/0001-85`, `Sala 1104`), stale plan prices
- *      (`299.00`, `499.00`, `999.00`), missing official CNPJ (`61.487.538/0001-67`), missing DPO
- *      contact (`privacidade@borysta.com`), or accidental naming of "WhatsApp" on HTML pages before
- *      Meta approval.
+ *   1. Always blocks stale corporate data (`56.842.193/0001-85`, `Sala 1104`, `Sala 701`, `60150-161`,
+ *      `privacidade@borysta.com`, `suporte@borysta.com`), stale plan prices (`299.00`, `499.00`, `999.00`),
+ *      missing official CNPJ (`61.487.538/0001-67`), missing official Eusébio/CE HQ (`Sala 20 Altos`), missing
+ *      official contact/DPO (`support@borysta.com`), or accidental naming of "WhatsApp" on landing/FAQ HTML pages.
  *   2. Enforces `/app/#/login` and `/app/#/cadastro` mount paths (never root `/#/login` or `/#/cadastro`
  *      which would collide with the Landing Page at `/`) and forbids inline executable `<script>` tags
  *      so strict `Content-Security-Policy: script-src 'self'` works without `'unsafe-inline'`.
@@ -61,11 +61,20 @@ export function evaluateSiteReadiness({
     if (content.includes('56.842.193/0001-85')) {
       errors.push(`[LGPD-02] ${name} still contains legacy CNPJ 56.842.193/0001-85 (expected 61.487.538/0001-67).`);
     }
-    if (content.includes('Sala 1104')) {
-      errors.push(`[LGPD-02] ${name} still contains legacy address Sala 1104 (expected Sala 701).`);
+    if (content.includes('Sala 1104') || content.includes('Sala 701') || content.includes('60150-161')) {
+      errors.push(`[LGPD-02] ${name} still contains legacy Fortaleza address (expected Sala 20 Altos, Eusébio/CE).`);
+    }
+    if (content.includes('privacidade@borysta.com') || content.includes('suporte@borysta.com')) {
+      errors.push(`[LGPD-02] ${name} still contains legacy contact email (expected support@borysta.com).`);
     }
     if (!content.includes('61.487.538/0001-67')) {
       errors.push(`[LGPD-02] ${name} is missing official CNPJ 61.487.538/0001-67.`);
+    }
+    if (!content.includes('support@borysta.com')) {
+      errors.push(`[LGPD-02] ${name} must publish DPO/support e-mail support@borysta.com (LGPD Art. 41 §1º).`);
+    }
+    if (!content.includes('Sala 20 Altos') || !content.includes('Eusébio')) {
+      errors.push(`[LGPD-02] ${name} must publish official corporate address Sala 20 Altos, Eusébio/CE (Decreto 7.962/2013 Art. 2º).`);
     }
   }
 
@@ -88,12 +97,6 @@ export function evaluateSiteReadiness({
     ['llms.txt', llmsTxt],
     ['llms-full.txt', llmsFullTxt],
   ]) {
-    if (!content.includes('privacidade@borysta.com')) {
-      errors.push(`[LGPD-02] ${name} must publish DPO e-mail privacidade@borysta.com (LGPD Art. 41 §1º).`);
-    }
-    if (!content.includes('Sala 701')) {
-      errors.push(`[LGPD-02] ${name} must publish official corporate address Sala 701 (Decreto 7.962/2013 Art. 2º).`);
-    }
     if (!content.includes('Pix Automático')) {
       errors.push(`[LGPD-02] ${name} must list Pix Automático among official payment methods.`);
     }
@@ -156,17 +159,17 @@ export function evaluateSiteReadiness({
     }
   }
 
-  // 3. LGPD-01: Legal pages placeholder & noindex check (warning on develop/homol, hard block on main)
+  // 3. LGPD-01: Legal pages placeholder, draft markers & noindex check (warning on develop/homol, hard block on main)
   for (const [name, html] of [
     ['politica-de-privacidade.html', privacyHtml],
     ['termos-de-uso.html', termsHtml],
   ]) {
-    const hasPlaceholder = /revis[aã]o jur[ií]dica/i.test(html);
+    const hasPlaceholder = /revis[aã]o jur[ií]dica|minuta para revis[aã]o|nota da minuta|n[aã]o publicada/i.test(html);
     const hasNoIndex = /noindex/i.test(html);
     const textLength = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().length;
 
     if (hasPlaceholder || hasNoIndex || textLength < 1200) {
-      const msg = `[LGPD-01] ${name} is still in placeholder/noindex state (textLength=${textLength}). Must contain full approved legal text before merging to main.`;
+      const msg = `[LGPD-01] ${name} is still in placeholder/draft/noindex state (textLength=${textLength}). Must contain full legal text before merging to main.`;
       if (isMainTarget) {
         errors.push(msg);
       } else {
