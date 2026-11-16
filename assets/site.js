@@ -1,7 +1,7 @@
 // presenca.borysta.com, round 3. The page reads and works without this file; the script adds the mobile menu,
 // the mark on the menu for the section in view, the hero film, the pictures that open once, the switch between without and with,
-// the counter, the tabs, the agenda before and after and the login window. Nothing here talks to a server: the sign-up card and the
-// login window only lead to the app, and nothing typed on this page is sent anywhere.
+// the counter, the tabs, and the agenda before and after. Nothing here talks to a server: the sign-up card and the
+// login links lead directly to the app (/app/#/login and /app/#/cadastro), and nothing typed on this page is sent anywhere.
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -131,24 +131,43 @@
     }));
   }
 
-  // --- the login window: the look of the app's own login; entering always continues in the app ---
-  const dialog = $('[data-dialog]');
-  if (dialog && typeof dialog.showModal === 'function') {
-    const mail = $('#l-mail', dialog);
-    const open = (email) => {
-      dialog.showModal();
-      if (email) mail.value = email;
-      // a phone keeps its keyboard closed until the visitor taps a field
-      if (matchMedia('(pointer: fine)').matches) (email ? $('#l-pass', dialog) : mail).focus();
-    };
-    $$('[data-login]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); open(); }));
-    $('[data-close]', dialog).addEventListener('click', () => dialog.close());
-    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
-    // nothing typed here is sent anywhere: the app asks for it again on its own, secure page
-    $('[data-login-go]', dialog).addEventListener('submit', (e) => { e.preventDefault(); location.href = e.target.action; });
-  }
-
   // --- the sign-up card: the e-mail stays on this page, the visitor continues on the app's own sign-up page ---
   const signup = $('[data-signup]');
   signup?.addEventListener('submit', (e) => { e.preventDefault(); location.href = signup.action; });
+
+  // --- referral attribution (?ref=CODE): functional propagation to app sign-up/login links (no cookies, no network calls) ---
+  const REF_KEY = 'presenca.referral.v1';
+  const REF_TTL_MS = 60 * 86_400_000;
+  const sanitizeRef = (raw) => {
+    const code = String(raw || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    return code.length >= 3 && code.length <= 40 ? code : null;
+  };
+  let activeRef = null;
+  try {
+    const urlRef = sanitizeRef(new URLSearchParams(location.search).get('ref'));
+    if (urlRef) {
+      activeRef = urlRef;
+      localStorage.setItem(REF_KEY, JSON.stringify({ code: urlRef, expiresAt: Date.now() + REF_TTL_MS }));
+    } else {
+      const saved = JSON.parse(localStorage.getItem(REF_KEY) || 'null');
+      if (saved && saved.expiresAt > Date.now()) activeRef = sanitizeRef(saved.code);
+    }
+  } catch {
+    // storage disabled or private mode: keep activeRef from URL only if valid
+    activeRef = sanitizeRef(new URLSearchParams(location.search).get('ref'));
+  }
+  if (activeRef) {
+    const appendRef = (rawHref) => {
+      try {
+        const u = new URL(rawHref, location.href);
+        if (!u.hash.startsWith('#/cadastro') && !u.hash.startsWith('#/login')) return rawHref;
+        u.searchParams.set('ref', activeRef);
+        return u.toString();
+      } catch {
+        return rawHref;
+      }
+    };
+    $$('a[href*="/#/cadastro"], a[href*="/#/login"]').forEach((a) => { a.href = appendRef(a.href); });
+    $$('form[action*="/#/cadastro"], form[action*="/#/login"]').forEach((f) => { f.action = appendRef(f.action); });
+  }
 })();

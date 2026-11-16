@@ -1,0 +1,26 @@
+rules:
+  - id: presenca-site-no-dom-xss-or-eval
+    message: >-
+      [Vacilacao #5] Uso de innerHTML direto, eval() ou new Function() detectado no site publico.
+      Utilize textContent/createElement e mantenha CSP estrita sem unsafe-eval.
+    severity: ERROR
+    languages: [javascript]
+    paths:
+      exclude:
+        - "/**/*.test.mjs"
+    pattern-either:
+      - pattern: $EL.innerHTML = $VAL
+      - pattern: eval($CODE)
+      - pattern: new Function(...)
+
+  - id: presenca-site-no-hardcoded-fallback-secret
+    message: >-
+      [Vacilacao #4] Segredo previsivel ou senha/token hardcoded detectado em script ou workflow.
+    severity: ERROR
+    languages: [javascript, yaml]
+    paths:
+      exclude:
+        - "/**/*.md"
+        - "/**/*.test.mjs"
+        - "/.opengrep.yml"
+    pattern-regex: (Borysta@2026!|borysta-dev-2026|presenca-borysta-sandbox-webhook-token-2026|presenca-local-dev-asaas-webhook-token)

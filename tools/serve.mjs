@@ -2,23 +2,29 @@
 // Serves the repository root. No dependencies, no caching, local only.
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
-import { join, extname, normalize, dirname } from 'node:path';
+import { join, extname, normalize, dirname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const rootPrefix = root.endsWith(sep) ? root : `${root}${sep}`;
 const port = Number(process.env.PORT || process.argv[2] || 8765);
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.json': 'application/json', '.txt': 'text/plain; charset=utf-8', '.webmanifest': 'application/manifest+json' };
+const securityHeaders = {
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'DENY',
+  'referrer-policy': 'strict-origin-when-cross-origin',
+};
 
 createServer(async (req, res) => {
   try {
     let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
     if (path.endsWith('/')) path += 'index.html';
-    const file = normalize(join(root, path));
-    if (!file.startsWith(root)) throw new Error('outside root');
+    const file = normalize(resolve(root, `.${path.startsWith('/') ? path : `/${path}`}`));
+    if (file !== root && !file.startsWith(rootPrefix)) throw new Error('outside root');
     const s = await stat(file);
     const target = s.isDirectory() ? join(file, 'index.html') : file;
     const body = await readFile(target);
-    const head = { 'content-type': types[extname(target)] || 'application/octet-stream', 'cache-control': 'no-store', 'accept-ranges': 'bytes' };
+    const head = { ...securityHeaders, 'content-type': types[extname(target)] || 'application/octet-stream', 'cache-control': 'no-store', 'accept-ranges': 'bytes' };
     // Safari plays a video only when the server answers byte ranges, as GitHub Pages does
     const range = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
     if (range && (range[1] || range[2])) {

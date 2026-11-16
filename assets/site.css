@@ -141,7 +141,7 @@ h2.center { max-width: 22ch; margin-inline: auto; }
 /* --- inside the platform: tabs as a bar of fields, text with figures, the screen; one example message after it --- */
 .plataforma { padding-block: 120px; background: var(--grey); }
 .tabs { margin-top: 48px; }
-.tabs__list { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.tabs__list { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; }
 .tabs__list button { min-height: 60px; padding: 10px 8px; border: 0; border-radius: var(--r) var(--r) 0 0; background: var(--grey-2); color: var(--navy); font-size: 16px; font-weight: 700; line-height: 1.2; cursor: pointer; transition: background-color .2s, color .2s; }
 .tabs__list button:hover { background: #D7DCE1; }
 .tabs__list button[aria-selected="true"] { background: var(--navy); color: #fff; }
@@ -158,7 +158,7 @@ h2.center { max-width: 22ch; margin-inline: auto; }
 .toggle button[aria-pressed="true"] { background: var(--navy); color: #fff; }
 .shot { padding: 20px; background: var(--grey); }
 .shot img { width: 100%; }
-.voz { display: grid; grid-template-columns: 1.3fr .7fr; gap: 48px; align-items: center; margin-top: 24px; padding: 40px 48px; background: var(--navy); }
+.figs__note { margin-top: 22px; font-size: 14px; line-height: 1.5; color: var(--muted); }.voz { display: grid; grid-template-columns: 1.3fr .7fr; gap: 48px; align-items: center; margin-top: 24px; padding: 40px 48px; background: var(--navy); }
 .voz__msg { display: grid; gap: 10px; margin: 0; }
 .b { max-width: 34em; padding: 14px 18px; border-radius: var(--r); font-size: 17px; line-height: 1.5; }
 .b--in { background: #fff; color: var(--navy); }
@@ -236,31 +236,49 @@ h2.center { max-width: 22ch; margin-inline: auto; }
 .foot a { color: var(--soft); text-decoration: none; transition: color .2s; }
 .foot a:hover { color: #fff; text-decoration: underline; }
 .foot__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; margin-top: 72px; font-size: 14px; }
+.foot--slim { padding-block: 40px; }
+.foot--slim .foot__bottom { margin-top: 0; align-items: center; }
+.foot__legal { display: flex; flex-wrap: wrap; gap: 12px 24px; }
 
-/* --- the login window, rebuilt from the click dummy --- */
-.login { width: min(1000px, 100% - 32px); max-height: calc(100% - 32px); padding: 0; overflow: auto; overscroll-behavior: contain; border: 0; border-radius: var(--r); background: #fff; }
-.login[open] { display: grid; grid-template-columns: 1fr 1fr; }
-.login::backdrop { background: rgba(2, 22, 44, .78); }
-.login__side { display: flex; flex-direction: column; justify-content: center; gap: 18px; padding: 64px 52px; background: var(--navy); color: var(--soft); }
-.login__h { font-size: 32px; line-height: 1.15; font-weight: 800; color: #fff; text-wrap: balance; }
-.login__card { position: relative; display: grid; align-content: center; gap: 18px; padding: 72px 52px 48px; }
-.login__x { position: absolute; top: 16px; right: 16px; min-height: 44px; padding: 0 18px; border: 2px solid var(--navy); border-radius: var(--pill); background: #fff; color: var(--navy); font-size: 14px; font-weight: 700; cursor: pointer; transition: background-color .2s, color .2s; }
-.login__x:hover { background: var(--navy); color: #fff; }
-.login__brand { display: flex; align-items: center; gap: 14px; justify-self: start; font-size: 14px; font-weight: 600; color: var(--muted); }
-.login__brand img { width: auto; height: 22px; }
-.login__brand strong { display: block; font-size: 16px; color: var(--navy); }
-.login__card h2 { font-size: 32px; }
+/* --- legal pages: flat, high-contrast typography, generous measure, semantic tables --- */
+.page-legal { min-height: 100svh; display: flex; flex-direction: column; }
+.page-legal main { flex: 1; }
+.legal { padding-block: 64px 96px; }
+.legal__in { max-width: 860px; }
+.legal__eyebrow { margin-bottom: 10px; font-size: 14px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--blue); }
+.legal h1 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; font-weight: 800; letter-spacing: -.02em; }
+.legal__lead { margin-top: 18px; max-width: 44em; font-size: 18px; color: var(--muted); }
+.legal__meta { margin-top: 28px; padding: 20px 24px; border-radius: var(--r); background: var(--grey); display: grid; gap: 6px; font-size: 15px; }
+.legal__meta strong { color: var(--navy); }
+.legal__nav { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.legal__doc { margin-top: 48px; }
+.legal__doc h2 { margin-top: 56px; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.18; }
+.legal__doc h3 { margin-top: 32px; font-size: 20px; line-height: 1.25; }
+.legal__doc p { margin-top: 14px; max-width: 48em; }
+.legal__doc ul { margin-top: 14px; padding-left: 22px; display: grid; gap: 8px; max-width: 48em; list-style: disc; }
+.legal__doc ol { margin-top: 14px; padding-left: 22px; display: grid; gap: 8px; max-width: 48em; list-style: decimal; }
+.legal__box { margin-top: 28px; padding: 24px; border-radius: var(--r); background: var(--grey); }
+.legal__box h3 { margin-top: 0; }
+.legal__table-wrap { overflow-x: auto; margin-block: 20px; border-radius: var(--r); }
+.legal table { width: 100%; border-collapse: collapse; font-size: 15px; text-align: left; }
+.legal th { padding: 14px 16px; background: var(--navy); color: #fff; font-weight: 700; }
+.legal td { padding: 14px 16px; vertical-align: top; }
+.legal tbody tr:nth-child(even) td { background: var(--grey); }
+.legal__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 48px; }
+@media (max-width: 720px) {
+  .legal { padding-block: 44px 64px; }
+  .legal__meta, .legal__box { padding: 18px 16px; }
+  .legal th, .legal td { padding: 12px; font-size: 14px; }
+}
+
+/* --- sign-up field and checkbox tokens --- */
 .field { display: grid; gap: 8px; }
 .field span { font-size: 14px; font-weight: 600; color: var(--navy); }
 .field input { width: 100%; height: 54px; padding: 0 16px; border: 2px solid var(--field); border-radius: var(--r); background: #fff; color: var(--navy); font-size: 16px; transition: border-color .2s; }
 .field input:hover { border-color: var(--navy); }
 .field input:focus { outline: none; border-color: var(--green); }
-.login__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; font-size: 14px; }
-.login__row a, .login__alt a { font-weight: 700; color: var(--navy); }
 .check { display: inline-flex; align-items: center; gap: 8px; }
 .check input { width: 18px; height: 18px; accent-color: var(--navy); }
-.login__note { font-size: 14px; color: var(--muted); text-align: center; }
-.login__alt { font-size: 16px; text-align: center; }
 
 /* --- motion: the hero film plays in a loop (site.js, with a pause button), photographs and screens open once when they
    come into view and the counter counts up once (site.js sets .motion, .is-in and the number). Nothing is hidden without the
@@ -354,12 +372,9 @@ h2.center { max-width: 22ch; margin-inline: auto; }
   .duvidas details p { padding: 0 20px 22px; font-size: 16px; }
   .foot { padding-top: 64px; }
   .foot__grid { grid-template-columns: 1fr; }
-  .login[open] { grid-template-columns: 1fr; }
-  .login__side { display: none; }
-  .login__card { padding: 72px 20px 32px; }
 }
 @media print {
-  .head, .hero__visual, .switch, .login { display: none !important; }
+  .head, .hero__visual, .switch { display: none !important; }
   .hero, .numeros, .foot { background: #fff; }
   .hero h1, .hero__lead, .numeros h2, .numeros strong, .contador__l, .stats dd { color: var(--navy); }
 }

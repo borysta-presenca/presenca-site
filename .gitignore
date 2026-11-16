@@ -1,2 +1,21 @@
 .taste-skill/
 .DS_Store
+
+# Terraform local cache, state & sensitive vars (state lives encrypted in S3)
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Environment files
+.env
+.env.*
+!.env.example
