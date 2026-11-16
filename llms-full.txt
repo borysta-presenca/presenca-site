@@ -9,7 +9,7 @@
 
 - **Nome da Plataforma**: Presença
 - **Desenvolvedora / Operadora**: Borysta AI Agency Ltda. (CNPJ 61.487.538/0001-67)
-- **Localização Sede**: Av. Santos Dumont, 2828, Sala 701, Aldeota, Fortaleza - CE, CEP 60150-161, Brasil
+- **Localização Sede**: Av. Eusébio de Queiroz, nº 1450, Sala 20 Altos, Tamatanduba, Eusébio/CE, CEP 61.768-680, Brasil
 - **Site Oficial**: https://presenca.borysta.com
 - **Aplicação Web / Cadastro**: https://dev.presenca.borysta.com/app/#/cadastro
 - **Categoria**: Agenda inteligente com assistente de IA.
@@ -95,6 +95,6 @@ Os planos e valores são apresentados pela equipe comercial. Fale com sales@bory
 ## 5. Contato
 
 - **Comercial**: sales@borysta.com
-- **Privacidade / DPO (LGPD)**: privacidade@borysta.com
+- **Privacidade / DPO / Suporte (LGPD)**: support@borysta.com
 - **Instagram**: @borysta.ia
 - **Site**: https://borysta.com
