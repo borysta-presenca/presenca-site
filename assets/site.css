@@ -236,6 +236,40 @@ h2.center { max-width: 22ch; margin-inline: auto; }
 .foot a { color: var(--soft); text-decoration: none; transition: color .2s; }
 .foot a:hover { color: #fff; text-decoration: underline; }
 .foot__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; margin-top: 72px; font-size: 14px; }
+.foot--slim { padding-block: 40px; }
+.foot--slim .foot__bottom { margin-top: 0; align-items: center; }
+.foot__legal { display: flex; flex-wrap: wrap; gap: 12px 24px; }
+
+/* --- legal pages: flat, high-contrast typography, generous measure, semantic tables --- */
+.page-legal { min-height: 100svh; display: flex; flex-direction: column; }
+.page-legal main { flex: 1; }
+.legal { padding-block: 64px 96px; }
+.legal__in { max-width: 860px; }
+.legal__eyebrow { margin-bottom: 10px; font-size: 14px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--blue); }
+.legal h1 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.1; font-weight: 800; letter-spacing: -.02em; }
+.legal__lead { margin-top: 18px; max-width: 44em; font-size: 18px; color: var(--muted); }
+.legal__meta { margin-top: 28px; padding: 20px 24px; border-radius: var(--r); background: var(--grey); display: grid; gap: 6px; font-size: 15px; }
+.legal__meta strong { color: var(--navy); }
+.legal__nav { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.legal__doc { margin-top: 48px; }
+.legal__doc h2 { margin-top: 56px; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.18; }
+.legal__doc h3 { margin-top: 32px; font-size: 20px; line-height: 1.25; }
+.legal__doc p { margin-top: 14px; max-width: 48em; }
+.legal__doc ul { margin-top: 14px; padding-left: 22px; display: grid; gap: 8px; max-width: 48em; list-style: disc; }
+.legal__doc ol { margin-top: 14px; padding-left: 22px; display: grid; gap: 8px; max-width: 48em; list-style: decimal; }
+.legal__box { margin-top: 28px; padding: 24px; border-radius: var(--r); background: var(--grey); }
+.legal__box h3 { margin-top: 0; }
+.legal__table-wrap { overflow-x: auto; margin-block: 20px; border-radius: var(--r); }
+.legal table { width: 100%; border-collapse: collapse; font-size: 15px; text-align: left; }
+.legal th { padding: 14px 16px; background: var(--navy); color: #fff; font-weight: 700; }
+.legal td { padding: 14px 16px; vertical-align: top; }
+.legal tbody tr:nth-child(even) td { background: var(--grey); }
+.legal__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 48px; }
+@media (max-width: 720px) {
+  .legal { padding-block: 44px 64px; }
+  .legal__meta, .legal__box { padding: 18px 16px; }
+  .legal th, .legal td { padding: 12px; font-size: 14px; }
+}
 
 /* --- sign-up field and checkbox tokens --- */
 .field { display: grid; gap: 8px; }
