@@ -131,9 +131,19 @@
     }));
   }
 
-  // --- the sign-up card: the e-mail stays on this page, the visitor continues on the app's own sign-up page ---
+  // --- the request-access card: forward optional email safely into the app onboarding screen (preserving ?ref=), zero cookies ---
   const signup = $('[data-signup]');
-  signup?.addEventListener('submit', (e) => { e.preventDefault(); location.href = signup.action; });
+  signup?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    try {
+      const u = new URL(signup.action, location.href);
+      const mail = String($('#s-mail', signup)?.value || '').trim().slice(0, 160);
+      if (mail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) u.searchParams.set('email', mail);
+      location.href = u.toString();
+    } catch {
+      location.href = signup.action;
+    }
+  });
 
   // --- referral attribution (?ref=CODE): functional propagation to app sign-up/login links (no cookies, no network calls) ---
   const REF_KEY = 'presenca.referral.v1';
