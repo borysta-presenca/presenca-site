@@ -22,9 +22,10 @@ function copyFixtureSite(tmp, targetHost = 'dev.presenca.borysta.com') {
   ]) {
     let content = readFileSync(join(repoRoot, f), 'utf8');
     if (['index.html', 'duvidas.html', 'llms-full.txt', '.well-known/ai-plugin.json'].includes(f)) {
-      content = content
-        .replaceAll('dev.presenca.borysta.com', targetHost)
-        .replaceAll('staging.presenca.borysta.com', targetHost);
+      content = content.replace(
+        /https:\/\/(?:dev\.|staging\.)?presenca\.borysta\.com(?=\/(?:app|api\/public\/openapi\.json))/g,
+        `https://${targetHost}`,
+      );
     }
     writeFileSync(join(tmp, f), content, 'utf8');
   }
@@ -64,11 +65,17 @@ test('blocks merge to homol if any dev.presenca.borysta.com URL remains and pass
 });
 
 test('allows main target once URLs are prod (zero LGPD-01/02 errors), and hard-blocks placeholder/noindex or dev/staging URLs on main', () => {
-  const repoMainRes = evaluateSiteReadiness({ rootDir: repoRoot, baseRef: 'main', refName: 'homol', enforceProd: false });
-  assert.equal(repoMainRes.ok, false);
-  assert.equal(repoMainRes.isMainTarget, true);
-  assert.equal(repoMainRes.errors.filter((e) => e.includes('[LGPD-01]') || e.includes('[LGPD-02]')).length, 0);
-  assert.ok(repoMainRes.errors.some((e) => e.includes('[PROD-URL] index.html')));
+  const stagingTmp = mkdtempSync(join(tmpdir(), 'presenca-site-staging-blocked-'));
+  try {
+    copyFixtureSite(stagingTmp, 'staging.presenca.borysta.com');
+    const stagingMainRes = evaluateSiteReadiness({ rootDir: stagingTmp, baseRef: 'main', refName: 'homol', enforceProd: false });
+    assert.equal(stagingMainRes.ok, false);
+    assert.equal(stagingMainRes.isMainTarget, true);
+    assert.equal(stagingMainRes.errors.filter((e) => e.includes('[LGPD-01]') || e.includes('[LGPD-02]')).length, 0);
+    assert.ok(stagingMainRes.errors.some((e) => e.includes('[PROD-URL] index.html')));
+  } finally {
+    rmSync(stagingTmp, { recursive: true, force: true });
+  }
 
   const cleanProdTmp = mkdtempSync(join(tmpdir(), 'presenca-site-prod-clean-'));
   try {
