@@ -19,7 +19,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository (full history for Gitleaks)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -27,7 +27,7 @@ jobs:
         run: bash tools/security-scan.sh
 
       - name: Setup Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 24
 
@@ -70,10 +70,10 @@ jobs:
       DEV_DEPLOY_ROLE_ARN: ${{ vars.AWS_DEV_DEPLOY_ROLE_ARN || 'arn:aws:iam::351495784017:role/presenca-site-dev-github-deploy' }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configure AWS credentials (OIDC - Dev us-east-1)
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ env.DEV_DEPLOY_ROLE_ARN }}
           aws-region: us-east-1
@@ -180,10 +180,10 @@ jobs:
       STAGING_DEPLOY_ROLE_ARN: ${{ vars.AWS_STAGING_DEPLOY_ROLE_ARN || 'arn:aws:iam::351495784017:role/presenca-site-staging-github-deploy' }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configure AWS credentials (OIDC - Staging sa-east-1)
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ env.STAGING_DEPLOY_ROLE_ARN }}
           aws-region: sa-east-1
@@ -255,7 +255,7 @@ jobs:
       PROD_CF_DIST_ID: ${{ secrets.PROD_CLOUDFRONT_DISTRIBUTION_ID }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Check if Production AWS Runtime is Active
         id: check_runtime
@@ -269,7 +269,7 @@ jobs:
 
       - name: Configure AWS credentials (OIDC - Production sa-east-1)
         if: steps.check_runtime.outputs.active == 'true'
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ secrets.AWS_PROD_DEPLOY_ROLE_ARN }}
           aws-region: sa-east-1
