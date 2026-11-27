@@ -160,21 +160,57 @@ export function evaluateSiteReadiness({
   }
 
   // 3. LGPD-01: Legal pages placeholder, draft markers & noindex check (warning on develop/homol, hard block on main)
+  const isDraftOrStub = (html) => {
+    const hasPlaceholder = /revis[aã]o jur[ií]dica|minuta para revis[aã]o|nota da minuta|n[aã]o publicada/i.test(html);
+    const hasNoIndex = /noindex/i.test(html);
+    const textLength = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().length;
+    return hasPlaceholder || hasNoIndex || textLength < 1200;
+  };
+
   for (const [name, html] of [
     ['politica-de-privacidade.html', privacyHtml],
     ['termos-de-uso.html', termsHtml],
   ]) {
-    const hasPlaceholder = /revis[aã]o jur[ií]dica|minuta para revis[aã]o|nota da minuta|n[aã]o publicada/i.test(html);
-    const hasNoIndex = /noindex/i.test(html);
     const textLength = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().length;
-
-    if (hasPlaceholder || hasNoIndex || textLength < 1200) {
+    if (isDraftOrStub(html)) {
       const msg = `[LGPD-01] ${name} is still in placeholder/draft/noindex state (textLength=${textLength}). Must contain full legal text before merging to main.`;
       if (isMainTarget) {
         errors.push(msg);
       } else {
         warnings.push(msg);
       }
+    }
+
+    if (/sales@borysta\.com/i.test(html)) {
+      errors.push(`[LGPD-02] ${name} must not display commercial e-mail sales@borysta.com in legal page headers (use support@borysta.com only).`);
+    }
+  }
+
+  if (isMainTarget || (!isDraftOrStub(privacyHtml) && !isDraftOrStub(termsHtml))) {
+    for (const requiredMarker of [
+      'Versão 3.0',
+      '27 de novembro de 2026',
+      'Conexão com o WhatsApp Business',
+      'Meta Platforms, Inc. e Meta Platforms Ireland Limited',
+      'Claudio Giovane e Silva Rodrigues',
+      '<table>',
+    ]) {
+      if (!privacyHtml.includes(requiredMarker)) {
+        errors.push(`[LGPD-03] politica-de-privacidade.html is missing required Privacy Policy 3.0 content (${requiredMarker}).`);
+      }
+    }
+
+    const privacyHashes = [...privacyHtml.matchAll(/<code>([0-9a-f]{64})<\/code>/gi)].map((m) => m[1].toLowerCase());
+    const termsMatch = termsHtml.match(/Termos de Uso[^<]*<\/strong>\s*<code>([0-9a-f]{64})<\/code>/i);
+    const dpaMatch = termsHtml.match(/Anexo I \/ DPA[^<]*<\/strong>\s*<code>([0-9a-f]{64})<\/code>/i);
+    const privacyHash = privacyHashes[0] || '';
+    const termsHash = termsMatch?.[1]?.toLowerCase() || '';
+    const dpaHash = dpaMatch?.[1]?.toLowerCase() || '';
+
+    if (!privacyHash || !termsHash || !dpaHash) {
+      errors.push('[LGPD-03] Legal pages must publish explicit 64-hex SHA-256 digests for Política, Termos, and DPA.');
+    } else if (new Set([privacyHash, termsHash, dpaHash]).size !== 3) {
+      errors.push('[LGPD-03] Política, Termos, and DPA must each have a distinct per-document SHA-256 hash.');
     }
   }
 
