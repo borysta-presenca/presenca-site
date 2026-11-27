@@ -165,3 +165,41 @@ test('validates JSON-LD in index.html, CSP init.js hash bridge, and referral san
   const siteCss = readFileSync(join(repoRoot, 'assets/site.css'), 'utf8');
   assert.match(siteCss, /\.figs__note\s*\{[^}]*font-size:\s*14px;/, '.figs__note must respect 14px minimum font-size');
 });
+
+test('enforces Privacy Policy 3.0 content, clean legal headers (no sales@), and distinct per-document SHA-256 hashes', () => {
+  const tmp = mkdtempSync(join(tmpdir(), 'presenca-site-legal-v3-'));
+  try {
+    copyFixtureSite(tmp, 'presenca.borysta.com');
+    const clean = evaluateSiteReadiness({ rootDir: tmp, baseRef: 'main', refName: 'homol', enforceProd: true });
+    assert.equal(clean.ok, true, `Expected clean prod legal V3 to pass, got: ${clean.errors.join('; ')}`);
+
+    // Adding sales@ to a legal page must fail
+    const withSales = readFileSync(join(tmp, 'politica-de-privacidade.html'), 'utf8').replace(
+      'support@borysta.com</a>',
+      'support@borysta.com</a> · sales@borysta.com',
+    );
+    writeFileSync(join(tmp, 'politica-de-privacidade.html'), withSales, 'utf8');
+    const salesBlocked = evaluateSiteReadiness({ rootDir: tmp, baseRef: 'develop', refName: 'feature/test' });
+    assert.equal(salesBlocked.ok, false);
+    assert.ok(salesBlocked.errors.some((e) => e.includes('sales@borysta.com')));
+
+    // Sharing identical SHA-256 between Termos and Política must fail
+    copyFixtureSite(tmp, 'presenca.borysta.com');
+    const sameHash = 'a'.repeat(64);
+    writeFileSync(
+      join(tmp, 'politica-de-privacidade.html'),
+      readFileSync(join(tmp, 'politica-de-privacidade.html'), 'utf8').replace(/<code>[0-9a-f]{64}<\/code>/i, `<code>${sameHash}</code>`),
+      'utf8',
+    );
+    writeFileSync(
+      join(tmp, 'termos-de-uso.html'),
+      readFileSync(join(tmp, 'termos-de-uso.html'), 'utf8').replace(/<code>[0-9a-f]{64}<\/code>/i, `<code>${sameHash}</code>`),
+      'utf8',
+    );
+    const dupHashBlocked = evaluateSiteReadiness({ rootDir: tmp, baseRef: 'develop', refName: 'feature/test' });
+    assert.equal(dupHashBlocked.ok, false);
+    assert.ok(dupHashBlocked.errors.some((e) => e.includes('distinct per-document SHA-256')));
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
+});
